@@ -4,6 +4,22 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+var mongoose = require('mongoose');
+
+require("./components/user/UserModel");
+require("./components/menu/MenuModel");
+require("./components/table/TableModel");
+require("./components/list/ListModel");
+require("./components/booking/BookingModel");
+require("./components/timeline/TimelineModel");
+
+var userRouter = require("./routes/api/UserAPI");
+var menuRouter = require("./routes/api/MenuAPI");
+var tableRouter = require("./routes/api/TableAPI");
+var listRouter = require("./routes/api/ListAPI");
+var bookingRouter = require("./routes/api/BookingAPI");
+var timelineRouter = require("./routes/api/TimelineAPI");
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -19,8 +35,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//connect database
+mongoose.connect('mongodb://localhost:27017/Server')
+  .then(() => console.log('>>>>>>>>>> DB Connected!!!!!!'))
+  .catch(err => console.log('>>>>>>>>> DB Error: ', err));
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.use('/user', userRouter);
+app.use('/menu', menuRouter);
+app.use('/table', tableRouter);
+app.use('/list', listRouter);
+app.use('/booking', bookingRouter);
+app.use('/timeline', timelineRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
