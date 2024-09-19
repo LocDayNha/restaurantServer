@@ -36,7 +36,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //connect database
-mongoose.connect('mongodb://localhost:27017/Server')
+mongoose.connect('mongodb+srv://locdaynha:DpOctSj0vCPcdF18@restaurant.vb2di.mongodb.net/')
   .then(() => console.log('>>>>>>>>>> DB Connected!!!!!!'))
   .catch(err => console.log('>>>>>>>>> DB Error: ', err));
 
