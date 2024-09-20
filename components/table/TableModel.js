@@ -4,7 +4,7 @@ const ObjectId = Schema.ObjectId;
 
 const table = new Schema({
   id: { type: ObjectId },
-  image: { type: String, default: '' },
+  dayTime: { type: String },
   number: { type: Number },
   userNumber: { type: String },
   timeline: { type: ObjectId, ref: "timeline" },

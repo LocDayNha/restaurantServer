@@ -133,7 +133,7 @@ router.post('/login', [validationLogin], async function (req, res, next) {
 });
 
 //localhost:3000/user/getInfoUser
-router.post('/getInfoUser', [validationProfile], checkToken, async function (req, res, next) {
+router.post('/getInfoUser', [validationProfile], async function (req, res, next) {
     try {
         const { id } = req.body;
         const infoUser = await userModel.findById(id);
@@ -145,7 +145,7 @@ router.post('/getInfoUser', [validationProfile], checkToken, async function (req
 });
 
 //localhost:3000/user/profileUpdate
-router.post('/profileUpdate', [validationProfile], checkToken, async function (req, res, next) {
+router.post('/profileUpdate', [validationProfile], async function (req, res, next) {
     try {
         const { id } = req.body;
         const { name, birth, address, phoneNumber, gender } = req.body;

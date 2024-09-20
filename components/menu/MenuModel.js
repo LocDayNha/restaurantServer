@@ -7,6 +7,7 @@ const menu = new Schema({
   image: { type: String, default: '' },
   name: { type: String },
   price: { type: String },
+  category: { type: ObjectId, ref: "category" },
 });
 
 module.exports = mongoose.models.menu || mongoose.model('menu', menu);
