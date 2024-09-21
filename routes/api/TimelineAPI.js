@@ -24,8 +24,8 @@ router.get('/get', async function (req, res, next) {
     }
 });
 
-//localhost:3000/timeline/editById
-router.post('/editById', async function (req, res, next) {
+//localhost:3000/timeline/editById/
+router.post('/editById/:id', async function (req, res, next) {
     try {
         const { id } = req.params;
         const { name } = req.body;
@@ -43,7 +43,7 @@ router.post('/editById', async function (req, res, next) {
 });
 
 //localhost:3000/timeline/deleteById
-router.delete('/deleteById', async function (req, res, next) {
+router.delete('/deleteById/:id', async function (req, res, next) {
     try {
         const { id } = req.params;
         await timelineModel.findByIdAndDelete(id);

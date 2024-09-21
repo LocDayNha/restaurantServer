@@ -4,8 +4,8 @@ const ObjectId = Schema.ObjectId;
 
 const menulist = new Schema({
   id: { type: ObjectId },
-  menu: { type: ObjectId, ref: "menu" },
-  user: { type: ObjectId, ref: "user" },
+  menu_id: { type: ObjectId, ref: "menu" },
+  user_id: { type: ObjectId, ref: "user" },
   quantity: { type: Number, default: '1' },
 });
 

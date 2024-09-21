@@ -7,8 +7,8 @@ var timelineModel = require("../../components/timeline/TimelineModel");
 //localhost:3000/table/add
 router.post('/add', async function (req, res, next) {
     try {
-        const { dayTime, number, userNumber, timeline } = req.body;
-        const addNew = { dayTime, number, userNumber, timeline };
+        const { number, userNumber, timeline_id } = req.body;
+        const addNew = { number, userNumber, timeline_id };
         await tableModel.create(addNew);
         res.status(200).json({ "status": true, "message": "Thanh Cong" });
     } catch (error) {
@@ -20,7 +20,7 @@ router.post('/add', async function (req, res, next) {
 router.get('/getByNumber', async function (req, res, next) {
     try {
         const { number } = req.body;
-        const list = await tableModel.find({ number: number }).populate('timeline');
+        const list = await tableModel.find({ number: number }).populate('timeline_id');
         res.status(200).json(list);
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai" });
@@ -28,13 +28,13 @@ router.get('/getByNumber', async function (req, res, next) {
 });
 
 //localhost:3000/menu/editById
-router.post('/editById', async function (req, res, next) {
+router.post('/editById/:id', async function (req, res, next) {
     try {
         const { id } = req.params;
-        const { dayTime } = req.body;
+        const { timeline_id } = req.body;
         const itemEdit = await tableModel.findById(id);
         if (itemEdit) {
-            itemEdit.dayTime = dayTime ? dayTime : itemEdit.dayTime;
+            itemEdit.timeline_id = timeline_id ? timeline_id : itemEdit.timeline_id;
             await itemEdit.save();
             res.status(200).json({ "status": true, "message": "Thanh Cong" });
         } else {

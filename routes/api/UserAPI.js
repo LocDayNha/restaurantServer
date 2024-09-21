@@ -36,9 +36,6 @@ router.post('/register', [validationRegister], async function (req, res, next) {
             const content = `
     <div
         style="font-family: Arial, sans-serif;background-color: #fff;padding: 20px;border-radius: 10px;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);max-width: 600px;width: 50%;">
-        <div style="text-align: center;">
-            <image style="max-width: 200px; max-height: 200px;" src="https://i.ibb.co/v1Cyp0N/Phoenix.png">
-        </div>
         <div class="email-content">
             <h1 style="color: #333;
         text-align: center;
@@ -75,9 +72,9 @@ router.post('/register', [validationRegister], async function (req, res, next) {
 });
 
 //localhost:3000/user/verify
-router.post('/verify', async function (req, res, next) {
+router.post('/verify/:id', async function (req, res, next) {
     try {
-        const { id } = req.query;
+        const { id } = req.params;
         const { code } = req.body;
         console.log(id);
 
@@ -96,7 +93,6 @@ router.post('/verify', async function (req, res, next) {
         return res.status(500).json({ "status": false, "message": "Loi he thong" });
     }
 });
-
 
 //localhost:3000/user/login
 router.post('/login', [validationLogin], async function (req, res, next) {
@@ -133,9 +129,9 @@ router.post('/login', [validationLogin], async function (req, res, next) {
 });
 
 //localhost:3000/user/getInfoUser
-router.post('/getInfoUser', [validationProfile], async function (req, res, next) {
+router.get('/getInfoUser/:id', async function (req, res, next) {
     try {
-        const { id } = req.body;
+        const { id } = req.params;
         const infoUser = await userModel.findById(id);
         return res.status(200).json({ "status": true, "message": "Lay thanh cong", infoUser });
     } catch (error) {
@@ -145,9 +141,9 @@ router.post('/getInfoUser', [validationProfile], async function (req, res, next)
 });
 
 //localhost:3000/user/profileUpdate
-router.post('/profileUpdate', [validationProfile], async function (req, res, next) {
+router.post('/profileUpdate/:id', [validationProfile], async function (req, res, next) {
     try {
-        const { id } = req.body;
+        const { id } = req.params;
         const { name, birth, address, phoneNumber, gender } = req.body;
         const update = await userModel.findById(id);
 

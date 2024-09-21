@@ -25,9 +25,9 @@ router.get('/get', async function (req, res, next) {
 });
 
 //localhost:3000/category/editById
-router.post('/editById', async function (req, res, next) {
+router.post('/editById/:id', async function (req, res, next) {
     try {
-        const { id, name } = req.body;
+        const { id, name } = req.params;
         const itemEdit = await categoryModel.findById(id);
         if (itemEdit) {
             itemEdit.name = name ? name : itemEdit.name;
@@ -41,7 +41,7 @@ router.post('/editById', async function (req, res, next) {
     }
 });
 
-//localhost:3000/category/deleteById?id=
+//localhost:3000/category/deleteById/
 router.delete('/deleteById/:id', async function (req, res, next) {
     try {
         const { id } = req.params;

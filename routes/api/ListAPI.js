@@ -8,13 +8,8 @@ var userModel = require("../../components/user/UserModel");
 //localhost:3000/list/addNew
 router.post('/addNew', async function (req, res, next) {
     try {
-        const { user, menu } = req.params;
-        const menuData = await menuModel.findById(menu);
-        if (!menuData) {
-            return res.status(404).json({ "status": false, "message": "Sản phẩm không tồn tại" });
-        }
-
-        const addNew = { user, product, quantity };
+        const { user_id, menu_id } = req.body;
+        const addNew = { user_id, menu_id };
         await listModel.create(addNew);
         res.status(200).json({ "status": true, "message": "Thanh Cong" });
     } catch (error) {
@@ -22,22 +17,48 @@ router.post('/addNew', async function (req, res, next) {
     }
 });
 
-//localhost:3000/list/getById
-router.get('/getById', async function (req, res, next) {
+//localhost:3000/list/get
+router.get('/get', async function (req, res, next) {
     try {
-        const user = await userModel.findOne({ user: req.params.user });
-        if (!user) {
-            return res.status(400).json({ "status": false, "message": "userId không tồn tại" });
-        }
-        const listmenu = await listModel.find({ user: user._id }).populate('menu');
+        const listmenu = await listModel.find().populate('menu_id');
         res.status(200).json(listmenu);
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai" });
     }
 });
 
+//localhost:3000/list/getByIdUser
+router.get('/getByIdUser/:id', async function (req, res, next) {
+    try {
+        const user = await userModel.findOne({ _id: req.params.id });
+        if (!user) {
+            return res.status(400).json({ "status": false, "message": "userId không tồn tại" });
+        }
+        const list = await listModel.find({ user_id: user._id }).populate('menu_id');
+        res.status(200).json(list);
+    } catch (error) {
+        res.status(400).json({ "status": false, "message": "That Bai" });
+    }
+});
+
+//localhost:3000/list/getByEmail
+router.get('/getByEmail', async function (req, res, next) {
+    try {
+        const { email } = req.body;
+        const user = await userModel.findOne({ email: email });
+        if (!user) {
+            return res.status(400).json({ "status": false, "message": "User không tồn tại" });
+        }
+        console.log(user);
+        const list = await listModel.find({ user_id: user._id }).populate('menu_id');
+        res.status(200).json(list);
+    } catch (error) {
+        res.status(400).json({ "status": false, "message": "That Bai" });
+    }
+});
+
 //localhost:3000/list/deleteById
-router.delete('/deleteById', async function (req, res, next) {
+router.delete('/deleteById/:id', async function (req, res, next) {
     try {
         const { id } = req.params;
         await listModel.findByIdAndDelete(id);
