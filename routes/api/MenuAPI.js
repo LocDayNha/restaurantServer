@@ -3,6 +3,9 @@ var router = express.Router();
 var menuModel = require("../../components/menu/MenuModel");
 var upload = require("../utils/upload");
 var categoryModel = require("../../components/category/CategoryModel");
+const { bucket } = require('../utils/firebase');
+const upload_firebase = require('../utils/multerConfig');
+const { v4: uuidv4 } = require('uuid');   // Để tạo tên tệp duy nhất
 
 //localhost:3000/menu/add
 router.post('/add', [upload.single('image')], async function (req, res, next) {
@@ -26,6 +29,44 @@ router.post('/upload-image', [upload.single('image')], async (req, res, next) =>
             const url = `http://localhost:3000/images/${file.filename}`;
             return res.json({ status: 1, url: url });
         }
+    } catch (error) {
+        console.log('Upload image error: ', error);
+        return res.json({ status: 0, link: "" });
+    }
+});
+
+//localhost:3000/menu/upload-image-firebase
+router.post('/upload-image-firebase', [upload_firebase.single('image')], async (req, res, next) => {
+    try {
+        if (!req.file) {
+            return res.status(400).send('Không có tập tin nào được tải lên');
+        }
+
+        // Tạo tên file duy nhất và định dạng file
+        const fileName = `${uuidv4()}.${req.file.mimetype.split('/')[1]}`;
+
+        // Tạo một file trong bucket Firebase
+        const file = bucket.file(fileName);
+
+        // Upload tệp lên Firebase Storage
+        const stream = file.createWriteStream({
+            metadata: {
+                contentType: req.file.mimetype
+            }
+        });
+
+        stream.on('error', (error) => {
+            console.error(error);
+            return res.status(400).send('Không tải được hình ảnh lên');
+        });
+        stream.on('finish', async () => {
+            //truy cập hình ảnh công khai 
+            await file.makePublic();
+            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${file.name}`;
+            res.status(200).json({ imageUrl: publicUrl });
+        });
+        stream.end(req.file.buffer);
+
     } catch (error) {
         console.log('Upload image error: ', error);
         return res.json({ status: 0, link: "" });
