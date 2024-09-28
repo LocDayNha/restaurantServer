@@ -76,7 +76,7 @@ router.post('/upload-image-firebase', [upload_firebase.single('image')], async (
 //localhost:3000/menu/get
 router.get('/get', async function (req, res, next) {
     try {
-        const list = await menuModel.find();
+        const list = await menuModel.find().populate('category');
         res.status(200).json(list);
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai" });
@@ -112,11 +112,13 @@ router.get('/getByName', async function (req, res, next) {
 router.post('/editById/:id', async function (req, res, next) {
     try {
         const { id } = req.params;
-        const { name, price } = req.body;
+        const { name, price, image, category } = req.body;
         const itemEdit = await menuModel.findById(id);
         if (itemEdit) {
             itemEdit.name = name ? name : itemEdit.name;
             itemEdit.price = price ? price : itemEdit.price;
+            itemEdit.image = image ? image : itemEdit.image;
+            itemEdit.category = category ? category : itemEdit.category;
             await itemEdit.save();
             res.status(200).json({ "status": true, "message": "Thanh Cong" });
         } else {

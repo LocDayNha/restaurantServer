@@ -3,10 +3,10 @@ var router = express.Router();
 var categoryModel = require("../../components/category/CategoryModel");
 
 //localhost:3000/category/add
- router.post('/add', async function (req, res, next) {
+router.post('/add', async function (req, res, next) {
     try {
-        const { name } = req.body;
-        const addNew = { name };
+        const { name, image } = req.body;
+        const addNew = { name, image };
         await categoryModel.create(addNew);
         res.json(addNew)
     } catch (error) {
@@ -24,13 +24,26 @@ router.get('/get', async function (req, res, next) {
     }
 });
 
+//localhost:3000/category/getCategoryById/
+router.get('/getCategoryById/:id', async function (req, res, next) {
+    try {
+        const {id} = req.params;
+        const list = await categoryModel.findById(id);
+        res.status(200).json(list);
+    } catch (error) {
+        res.status(400).json({ "status": false, "message": "That Bai" });
+    }
+});
+
 //localhost:3000/category/editById
 router.post('/editById/:id', async function (req, res, next) {
     try {
-        const { id, name } = req.params;
+        const { id } = req.params;
+        const { name, image } = req.body;
         const itemEdit = await categoryModel.findById(id);
         if (itemEdit) {
             itemEdit.name = name ? name : itemEdit.name;
+            itemEdit.image = image ? image : itemEdit.image;
             await itemEdit.save();
             res.status(200).json({ "status": true, "message": "Thanh Cong" });
         } else {
