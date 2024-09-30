@@ -72,14 +72,11 @@ router.post('/register', [validationRegister], async function (req, res, next) {
 });
 
 //localhost:3000/user/verify
-router.post('/verify/:id', async function (req, res, next) {
+router.post('/verify', async function (req, res, next) {
     try {
-        const { id } = req.params;
-        const { code } = req.body;
-        console.log(id);
+        const { code, email } = req.body;
 
-        const user = await userModel.findById(id);
-        console.log(user);
+        const user = await userModel.findOne({ email: email });
 
         if (user.verifyCode === parseInt(code)) {
             user.isVerified = true;
@@ -101,8 +98,11 @@ router.post('/login', [validationLogin], async function (req, res, next) {
         console.log(email, password);
 
         const userMail = await userModel.findOne({ email: email });
+
         if (!userMail) {
             return res.status(400).json({ "status": false, "message": "Email không tồn tại" });
+        } else if (userMail.isVerified !== true) {
+            return res.status(400).json({ "status": false, "message": "Email chưa được xác thực" });
         } else {
             const login = await userModel.findOne({ email, password });
             console.log(login);
@@ -125,6 +125,53 @@ router.post('/login', [validationLogin], async function (req, res, next) {
     } catch (error) {
         console.log(error);
         return res.status(500).json({ "status": false, "message": "Loi he thong" });
+    }
+});
+
+//localhost:3000/user/sentcode
+router.post('/sentcode', async function (req, res, next) {
+    try {
+        const { email } = req.body;
+
+        const userMail = await userModel.findOne({ email: email });
+        const verifyCode = Math.floor(1000 + Math.random() * 9000);
+
+        if (!userMail) {
+            return res.status(400).json({ "status": false, "message": "Email không tồn tại" });
+        } else if (userMail.isVerified !== true) {
+            return res.status(400).json({ "status": false, "message": "Email chưa được xác thực" });
+        } else {
+            if (userMail) {
+                userMail.verifyCode = verifyCode ? verifyCode : userMail.verifyCode;
+                await userMail.save();
+                return res.status(200).json({ "status": true, "message": "Gui ma thanh cong" });
+            }else{
+                return res.status(200).json({ "status": true, "message": "Gui ma that bai" });
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ "status": false, "message": "That bai" });
+    }
+});
+
+//localhost:3000/user/forgotpass
+router.get('/forgotpass', async function (req, res, next) {
+    try {
+        const { email } = req.body;
+
+        const userMail = await userModel.findOne({ email: email });
+
+        if (userMail) {
+            userMail.password = password ? password : userMail.password;
+            await userMail.save();
+            return res.status(200).json({ "status": true, "message": "Cap nhat thanh cong" });
+        }else{
+            return res.status(200).json({ "status": true, "message": "Cap nhat that bai" });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ "status": false, "message": "Loi" });
     }
 });
 
