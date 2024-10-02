@@ -16,8 +16,7 @@ const { validationProfile } = require('../validation/profile');
 //localhost:3000/user/register
 router.post('/register', [validationRegister], async function (req, res, next) {
     try {
-        const { email, password, password2, createAt } = req.body;
-        const verifyCode = Math.floor(1000 + Math.random() * 9000);
+        const { email, password, createAt } = req.body;
 
         const userMail = await userModel.findOne({ email: email });
         if (userMail) {
@@ -25,11 +24,28 @@ router.post('/register', [validationRegister], async function (req, res, next) {
             return false;
         }
 
-        const register = { email, password, createAt, verifyCode, isVerified: false };
+        const register = { email, password, createAt, isVerified: false };
         const user = new userModel(register);
         await user.save();
+        return res.status(200).json({ status: true, message: "Đăng ký thành công" });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ "status": false, "message": "Loi he thong" });
+    }
+});
 
-        console.log(user);
+//localhost:3000/user/send-mail
+router.post('/send-mail', async function (req, res, next) {
+    try {
+        const { email } = req.body;
+
+        const userMail = await userModel.findOne({ email: email });
+        const verifyCode = Math.floor(1000 + Math.random() * 9000);
+
+        if (userMail) {
+            userMail.verifyCode = verifyCode ? verifyCode : userMail.verifyCode;
+            await userMail.save();
+        }
 
         try {
             const subject = 'Phonex Restaurant Verification Code';
@@ -59,12 +75,10 @@ router.post('/register', [validationRegister], async function (req, res, next) {
             };
 
             await sendMail.transporter.sendMail(mailOptions);
-            res.status(200).json({ status: true, message: "Gửi mã xác minh qua email" });
+            return res.status(200).json({ status: true, message: "Gửi mã xác minh qua email" });
         } catch (err) {
-            res.status(400).json({ status: false, message: "Gửi mail thất bại" });
+            return res.status(400).json({ status: false, message: "Gửi mail thất bại" });
         }
-
-        return res.status(200).json({ status: true, message: "Đăng ký thành công" });
     } catch (error) {
         console.log(error);
         return res.status(400).json({ "status": false, "message": "Loi he thong" });
@@ -94,8 +108,7 @@ router.post('/verify', async function (req, res, next) {
 //localhost:3000/user/login
 router.post('/login', [validationLogin], async function (req, res, next) {
     try {
-        const { email, password } = req.body;
-        console.log(email, password);
+        const { email, pass } = req.body;
 
         const userMail = await userModel.findOne({ email: email });
 
@@ -104,17 +117,16 @@ router.post('/login', [validationLogin], async function (req, res, next) {
         } else if (userMail.isVerified !== true) {
             return res.status(400).json({ "status": false, "message": "Email chưa được xác thực" });
         } else {
-            const login = await userModel.findOne({ email, password });
-            console.log(login);
-            if (login) {
-                const token = JWT.sign({ login }, config.SECRETKEY, { expiresIn: '1h' });
+            if (userMail.password === pass) {
+                const { password, ...newUser } = userMail._doc;
+                const token = JWT.sign({ newUser }, config.SECRETKEY, { expiresIn: '1h' });
                 const returnData = {
                     error: false,
                     responseTimestamp: new Date(),
                     statusCode: 200,
                     data: {
                         token: token,
-                        user: login,
+                        user: newUser,
                     },
                 };
                 return res.status(200).json({ "status": true, "message": "Dang Nhap Thanh Cong", returnData });
@@ -128,8 +140,8 @@ router.post('/login', [validationLogin], async function (req, res, next) {
     }
 });
 
-//localhost:3000/user/sentcode
-router.post('/sentcode', async function (req, res, next) {
+//localhost:3000/user/sent-code
+router.post('/sent-code', async function (req, res, next) {
     try {
         const { email } = req.body;
 
@@ -144,8 +156,40 @@ router.post('/sentcode', async function (req, res, next) {
             if (userMail) {
                 userMail.verifyCode = verifyCode ? verifyCode : userMail.verifyCode;
                 await userMail.save();
-                return res.status(200).json({ "status": true, "message": "Gui ma thanh cong" });
-            }else{
+
+                try {
+                    const subject = 'Phonex Restaurant Verification Code';
+                    const content = `
+            <div
+                style="font-family: Arial, sans-serif;background-color: #fff;padding: 20px;border-radius: 10px;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);max-width: 600px;width: 50%;">
+                <div class="email-content">
+                    <h1 style="color: #333;
+                text-align: center;
+                font-size: 24px;">Mã Xác Minh</h1>
+                    <p style="color: #555; font-size: 16px; line-height: 1.5; margin: 20px 0; text-align: center;">
+                        Nhập mã này trên màn hình để xác minh danh tính:</p>
+                    <p style="color: #555; font-size: 16px; line-height: 1.5; margin: 20px 0; text-align: center; display: block;
+                background-color: #f0f0f0;font-size: 32px;font-weight: bold;text-align: center;padding: 10px;margin: 20px auto;width: 150px;border-radius: 8px;letter-spacing: 5px;">
+                        ${verifyCode}</p>
+                    <p style="color: #555; font-size: 16px; line-height: 1.5; margin: 20px 0; text-align: center;">
+                        Mã này sẽ hết hạn trong thời gian ngắn. Hãy sử dụng nó sớm.</p>
+                </div>
+            </div>
+                `;
+
+                    const mailOptions = {
+                        from: "Phonex Restaurant <phoenixrestaurant13@gmail.com>", // Người gửi
+                        to: email, // Người nhận
+                        subject: subject, // Tiêu đề
+                        html: content // Nội dung HTML
+                    };
+
+                    await sendMail.transporter.sendMail(mailOptions);
+                    return res.status(200).json({ status: true, message: "Gửi mã xác minh qua email" });
+                } catch (err) {
+                    return res.status(400).json({ status: false, message: "Gửi mail thất bại" });
+                }
+            } else {
                 return res.status(200).json({ "status": true, "message": "Gui ma that bai" });
             }
         }
@@ -156,17 +200,17 @@ router.post('/sentcode', async function (req, res, next) {
 });
 
 //localhost:3000/user/forgotpass
-router.get('/forgotpass', async function (req, res, next) {
+router.post('/forgotpass', async function (req, res, next) {
     try {
-        const { email } = req.body;
+        const { email, password, password2 } = req.body;
 
         const userMail = await userModel.findOne({ email: email });
 
-        if (userMail) {
+        if (userMail && password === password2) {
             userMail.password = password ? password : userMail.password;
             await userMail.save();
             return res.status(200).json({ "status": true, "message": "Cap nhat thanh cong" });
-        }else{
+        } else {
             return res.status(200).json({ "status": true, "message": "Cap nhat that bai" });
         }
     } catch (error) {

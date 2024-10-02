@@ -9,18 +9,18 @@ var mongoose = require('mongoose');
 require("./components/user/UserModel");
 require("./components/menu/MenuModel");
 require("./components/table/TableModel");
-require("./components/list/ListModel");
 require("./components/booking/BookingModel");
 require("./components/timeline/TimelineModel");
 require("./components/category/CategoryModel");
+require("./components/order/OrderModel");
 
 var userRouter = require("./routes/api/UserAPI");
 var menuRouter = require("./routes/api/MenuAPI");
 var tableRouter = require("./routes/api/TableAPI");
-var listRouter = require("./routes/api/ListAPI");
 var bookingRouter = require("./routes/api/BookingAPI");
 var timelineRouter = require("./routes/api/TimelineAPI");
 var categoryRouter = require("./routes/api/CategoryAPI");
+var orderRouter = require("./routes/api/OrderAPI");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -48,10 +48,10 @@ app.use('/users', usersRouter);
 app.use('/user', userRouter);
 app.use('/menu', menuRouter);
 app.use('/table', tableRouter);
-app.use('/list', listRouter);
 app.use('/booking', bookingRouter);
 app.use('/timeline', timelineRouter);
 app.use('/category', categoryRouter);
+app.use('/order', orderRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
