@@ -27,7 +27,18 @@ router.get('/getByNumber', async function (req, res, next) {
     }
 });
 
-//localhost:3000/menu/editById
+//localhost:3000/table/getById
+router.get('/getById/:id', async function (req, res, next) {
+    try {
+        const { id } = req.params;
+        const list = await tableModel.findById(id).populate('timeline_id');
+        res.status(200).json(list);
+    } catch (error) {
+        res.status(400).json({ "status": false, "message": "That Bai" });
+    }
+});
+
+//localhost:3000/table/editById
 router.post('/editById/:id', async function (req, res, next) {
     try {
         const { id } = req.params;
@@ -45,7 +56,7 @@ router.post('/editById/:id', async function (req, res, next) {
     }
 });
 
-//localhost:3000/list/deleteById
+//localhost:3000/table/deleteById
 router.delete('/deleteById', async function (req, res, next) {
     try {
         const { id } = req.params;
