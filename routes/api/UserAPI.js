@@ -34,7 +34,7 @@ router.post('/register', [validationRegister], async function (req, res, next) {
     }
 });
 
-//localhost:3000/user/send-mail
+//localhost:3000/user/send-mail                              register
 router.post('/send-mail', async function (req, res, next) {
     try {
         const { email } = req.body;
@@ -140,7 +140,7 @@ router.post('/login', [validationLogin], async function (req, res, next) {
     }
 });
 
-//localhost:3000/user/sent-code
+//localhost:3000/user/sent-code                              forgotpass
 router.post('/sent-code', async function (req, res, next) {
     try {
         const { email } = req.body;
