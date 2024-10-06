@@ -17,7 +17,7 @@ router.post('/add', async function (req, res, next) {
 });
 
 //localhost:3000/table/getByNumber
-router.get('/getByNumber', async function (req, res, next) {
+router.post('/getByNumber', async function (req, res, next) {
     try {
         const { number } = req.body;
         const list = await tableModel.find({ number: number }).populate('timeline_id');

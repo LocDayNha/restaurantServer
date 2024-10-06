@@ -108,7 +108,7 @@ router.post('/verify', async function (req, res, next) {
 //localhost:3000/user/login
 router.post('/login', [validationLogin], async function (req, res, next) {
     try {
-        const { email, pass } = req.body;
+        const { email, password } = req.body;
 
         const userMail = await userModel.findOne({ email: email });
 
@@ -117,7 +117,7 @@ router.post('/login', [validationLogin], async function (req, res, next) {
         } else if (userMail.isVerified !== true) {
             return res.status(400).json({ "status": false, "message": "Email chưa được xác thực" });
         } else {
-            if (userMail.password === pass) {
+            if (userMail.password === password) {
                 const { password, ...newUser } = userMail._doc;
                 const token = JWT.sign({ newUser }, config.SECRETKEY, { expiresIn: '1h' });
                 const returnData = {
