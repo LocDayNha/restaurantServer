@@ -8,6 +8,7 @@ const menu = new Schema({
   name: { type: String },
   price: { type: String },
   category: { type: ObjectId, ref: "category" },
+  quantity: { type: Number, default: 1 },
   isActive: { type: Boolean, default: true }
 });
 

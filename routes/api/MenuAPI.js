@@ -112,13 +112,14 @@ router.get('/getByName', async function (req, res, next) {
 router.post('/editById/:id', async function (req, res, next) {
     try {
         const { id } = req.params;
-        const { name, price, image, category } = req.body;
+        const { name, price, image, category, quantity } = req.body;
         const itemEdit = await menuModel.findById(id);
         if (itemEdit) {
             itemEdit.name = name ? name : itemEdit.name;
             itemEdit.price = price ? price : itemEdit.price;
             itemEdit.image = image ? image : itemEdit.image;
             itemEdit.category = category ? category : itemEdit.category;
+            itemEdit.quantity = quantity ? quantity : itemEdit.quantity;
             await itemEdit.save();
             res.status(200).json({ "status": true, "message": "Thanh Cong" });
         } else {
