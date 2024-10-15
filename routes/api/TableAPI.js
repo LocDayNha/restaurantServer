@@ -21,7 +21,11 @@ router.post('/getByNumber', async function (req, res, next) {
     try {
         const { number } = req.body;
         const list = await tableModel.find({ number: number }).populate('timeline_id');
-        res.status(200).json(list);
+        if (list.isOrder === false) {
+            res.status(200).json(list);
+        } else {
+            es.status(400).json({ "status": false, "message": "That Bai" });
+        }
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai" });
     }
