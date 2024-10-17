@@ -56,7 +56,7 @@ router.post('/upload-image-firebase', [upload_firebase.single('image')], async (
         });
 
         stream.on('error', (error) => {
-            console.error(error);
+            console.log(error);
             return res.status(400).send('Không tải được hình ảnh lên');
         });
         stream.on('finish', async () => {

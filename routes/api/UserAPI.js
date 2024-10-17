@@ -235,15 +235,16 @@ router.get('/getInfoUser/:id', async function (req, res, next) {
 router.post('/profileUpdate/:id', [validationProfile], async function (req, res, next) {
     try {
         const { id } = req.params;
-        const { name, birth, address, phoneNumber, gender } = req.body;
+        const { name, birth, address, phoneNumber, gender, image } = req.body;
         const update = await userModel.findById(id);
-
+        console.log(update);
         if (update) {
             update.name = name ? name : update.name;
             update.birth = birth ? birth : update.birth;
             update.phoneNumber = phoneNumber ? phoneNumber : update.phoneNumber;
             update.address = address ? address : update.address;
             update.gender = gender ? gender : update.gender;
+            update.image = image ? image : update.image;
             await update.save();
             return res.status(200).json({ "status": true, "message": "Cap Nhat Profile Thanh Cong" });
         } else {
