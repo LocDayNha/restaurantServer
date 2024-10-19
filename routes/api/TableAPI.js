@@ -20,12 +20,9 @@ router.post('/add', async function (req, res, next) {
 router.post('/getByNumber', async function (req, res, next) {
     try {
         const { number } = req.body;
-        const list = await tableModel.find({ number: number }).populate('timeline_id');
-        if (list.isOrder === false) {
-            res.status(200).json(list);
-        } else {
-            es.status(400).json({ "status": false, "message": "That Bai" });
-        }
+        const isOrder = false;
+        const list = await tableModel.find({ number: number, isOrder: isOrder }).populate('timeline_id');
+        res.status(200).json(list);
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai" });
     }
