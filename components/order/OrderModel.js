@@ -4,13 +4,14 @@ const ObjectId = Schema.ObjectId;
 
 const order = new Schema({
     id: { type: ObjectId },
-    table: { type: String },
+    tableNumber: { type: String },
     nameUser: { type: String },
-    dishes: {type: Array},
+    dishes: { type: Array },
     quantity: { type: Number },
     totalMoney: { type: Number },
     isPayment: { type: Boolean, default: false },
-    createAt: { type: Date, default: Date.now },
+    timeOrder: { type: String },
+    dayOrder: { type: String },
 });
 
 module.exports = mongoose.models.order || mongoose.model('order', order);

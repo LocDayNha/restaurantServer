@@ -6,23 +6,25 @@ var menuModel = require("../../components/menu/MenuModel");
 //localhost:3000/order/addNew
 router.post('/addNew', async function (req, res, next) {
     try {
-        const { table, nameUser, dishes } = req.body;
-
-        const menuIds = dishes.map(dish => dish.menuId); //tạo ra một mảng mới, chỉ chứa giá trị menuId của mỗi món ăn
+        const { tableNumber, nameUser, dishes } = req.body;
+        const menuIds = dishes.map(dish => dish._id); //tạo ra một mảng mới, chỉ chứa giá trị menuId của mỗi món ăn
         const menuItems = await menuModel.find({ _id: { $in: menuIds } }); //mảng menuItems chứa các đối tượng món ăn từ cơ sở dữ liệu
 
         let totalQuantity = 0;
         let totalMoney = 0;
+        const currentDate = new Date();
+        let timeNow = currentDate.toLocaleTimeString('vi-VN');
+        let dayNow = currentDate.toLocaleDateString('vi-VN'); 
 
         dishes.forEach(dish => {  // forEach là một vòng lặp qua từng món ăn trong mảng dishes
-            const menuItem = menuItems.find(item => item._id.toString() === dish.menuId);
+            const menuItem = menuItems.find(item => item._id.toString() === dish._id);
             if (menuItem) { // Kiểm tra có tìm thấy món ăn trong cơ sở dữ liệu hay không -> thực hiện các tính toán
                 totalQuantity += parseInt(dish.quantity, 10);
                 totalMoney += menuItem.price * parseInt(dish.quantity, 10);
             }
         });
 
-        const order = { table, nameUser, dishes, quantity: totalQuantity, totalMoney };
+        const order = { tableNumber, nameUser, dishes, quantity: totalQuantity, totalMoney, timeOrder: timeNow, dayOrder: dayNow };
 
         await orderModel.create(order);
 
