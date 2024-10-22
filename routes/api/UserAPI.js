@@ -21,7 +21,7 @@ router.post('/register', [validationRegister], async function (req, res, next) {
         const userMail = await userModel.findOne({ email: email });
         if (userMail) {
             console.log('Email đã được đăng ký');
-            return false;
+            return res.status(400).json({ result: false, message: 'Email đã được đăng ký' });
         }
 
         const register = { email, password, createAt, isVerified: false };

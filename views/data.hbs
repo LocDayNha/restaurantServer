@@ -67,102 +67,61 @@
                             <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        <th class="text-center text-secondary opacity-7">
                                             Image</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        <th class="text-center text-secondary opacity-7">
                                             Name</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        <th class="text-center text-secondary opacity-7">
                                             Price</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        <th class="text-center text-secondary opacity-7">
                                             Category</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Active</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        <th class="text-center text-center text-secondary opacity-7">
                                             Create</th>
-                                        <th class="text-secondary opacity-7"></th>
-                                        <th class="text-secondary opacity-7"></th>
+                                        <th class="text-center text-secondary opacity-7">
+                                            Active</th>
+                                        <th class="text-center text-secondary opacity-7"></th>
+                                        <th class="text-center text-secondary opacity-7"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {{#each menu}}
                                     <tr>
                                         <td>
                                             <div class="d-flex px-2 py-1">
                                                 <div>
-                                                    <img src="" class="avatar avatar-sm"
-                                                        alt="user1">
+                                                    <img src="{{image}}" class="avatar avatar-sm" alt="user1">
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">Manager</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{name}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">Manager</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{price}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">Manager</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{category.name}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-center text-xs font-weight-bold mb-0">null</p>
                                         </td>
                                         <td class="align-middle text-center text-sm">
                                             <span class="badge badge-sm bg-gradient-success">Online</span>
                                         </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
-                                        </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
+                                            <a href="#" class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
+                                            <a href="#" class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Delete
                                             </a>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div>
-                                                    <img src="" class="avatar avatar-sm me-3"
-                                                        alt="user2">
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">Programator</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">Programator</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">Manager</p>
-                                        </td>
-                                        <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm bg-gradient-secondary">Offline</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">11/01/19</span>
-                                        </td>
-                                        <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
-                                                data-toggle="tooltip" data-original-title="Edit user">
-                                                Edit
-                                            </a>
-                                        </td>
-                                        <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
-                                                data-toggle="tooltip" data-original-title="Edit user">
-                                                Delete
-                                            </a>
-                                        </td>
-                                    </tr>
+                                    {{/each}}
                                 </tbody>
                             </table>
                         </div>
@@ -182,88 +141,47 @@
                             <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Image</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Name</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        <th class="text-center text-secondary opacity-7">
+                                            Number</th>
+                                        <th class="text-center text-secondary opacity-7">
+                                            Seat</th>
+                                        <th class="text-center text-secondary opacity-7">
                                             Timeline</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Order</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        <th class="text-center text-center text-secondary opacity-7">
                                             Create</th>
-                                        <th class="text-secondary opacity-7"></th>
-                                        <th class="text-secondary opacity-7"></th>
+                                        <th class="text-center text-secondary opacity-7">
+                                            Active</th>
+                                        <th class="text-center text-secondary opacity-7"></th>
+                                        <th class="text-center text-secondary opacity-7"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div>
-                                                    <img src="" class="avatar avatar-sm"
-                                                        alt="user1">
-                                                </div>
-                                            </div>
+                                            <p class="text-center text-xs font-weight-bold mb-0">1</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">Manager</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">4</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">Manager</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">1 PM</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-center text-xs font-weight-bold mb-0">null</p>
                                         </td>
                                         <td class="align-middle text-center text-sm">
                                             <span class="badge badge-sm bg-gradient-success">Online</span>
                                         </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
-                                        </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
+                                            <a href="javascript:;"
+                                                class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
-                                                data-toggle="tooltip" data-original-title="Edit user">
-                                                Delete
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div>
-                                                    <img src="" class="avatar avatar-sm me-3"
-                                                        alt="user2">
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">Programator</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">Programator</p>
-                                        </td>
-                                        <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm bg-gradient-secondary">Offline</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">11/01/19</span>
-                                        </td>
-                                        <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
-                                                data-toggle="tooltip" data-original-title="Edit user">
-                                                Edit
-                                            </a>
-                                        </td>
-                                        <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
+                                            <a href="javascript:;"
+                                                class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Delete
                                             </a>
@@ -288,84 +206,53 @@
                             <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        <th class="text-center text-secondary opacity-7">
                                             Image</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        <th class="text-center text-secondary opacity-7">
                                             Name</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Active</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        <th class="text-center text-center text-secondary opacity-7">
                                             Create</th>
-                                        <th class="text-secondary opacity-7"></th>
-                                        <th class="text-secondary opacity-7"></th>
+                                        <th class="text-center text-secondary opacity-7">
+                                            Active</th>
+                                        <th class="text-center text-secondary opacity-7"></th>
+                                        <th class="text-center text-secondary opacity-7"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {{#each category}}
                                     <tr>
                                         <td>
                                             <div class="d-flex px-2 py-1">
                                                 <div>
-                                                    <img src="" class="avatar avatar-sm"
-                                                        alt="user1">
+                                                    <img src="{{image}}" class="avatar avatar-sm" alt="user1">
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0">Manager</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{name}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-center text-xs font-weight-bold mb-0">null</p>
                                         </td>
                                         <td class="align-middle text-center text-sm">
                                             <span class="badge badge-sm bg-gradient-success">Online</span>
                                         </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
-                                        </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
+                                            <a href="javascript:;"
+                                                class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
+                                            <a href="javascript:;"
+                                                class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Delete
                                             </a>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div>
-                                                    <img src="" class="avatar avatar-sm me-3"
-                                                        alt="user2">
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">Programator</p>
-                                        </td>
-                                        <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm bg-gradient-secondary">Offline</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">11/01/19</span>
-                                        </td>
-                                        <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
-                                                data-toggle="tooltip" data-original-title="Edit user">
-                                                Edit
-                                            </a>
-                                        </td>
-                                        <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
-                                                data-toggle="tooltip" data-original-title="Edit user">
-                                                Delete
-                                            </a>
-                                        </td>
-                                    </tr>
+                                    {{/each}}
                                 </tbody>
                             </table>
                         </div>
@@ -385,84 +272,44 @@
                             <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Image</th>
-                                        <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        <th class="text-center text-secondary opacity-7">
                                             Name</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Active</th>
-                                        <th
-                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        <th class="text-center text-secondary opacity-7">
                                             Create</th>
-                                        <th class="text-secondary opacity-7"></th>
-                                        <th class="text-secondary opacity-7"></th>
+                                        <th class="text-center text-secondary opacity-7">
+                                            Active</th>
+                                        <th class="text-center text-secondary opacity-7"></th>
+                                        <th class="text-center text-secondary opacity-7"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {{#each timeline}}
                                     <tr>
                                         <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div>
-                                                    <img src="" class="avatar avatar-sm"
-                                                        alt="user1">
-                                                </div>
-                                            </div>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{name}}</p>
                                         </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">Manager</p>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">null</span>
                                         </td>
                                         <td class="align-middle text-center text-sm">
                                             <span class="badge badge-sm bg-gradient-success">Online</span>
                                         </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
-                                        </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
+                                            <a href="javascript:;"
+                                                class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
+                                            <a href="javascript:;"
+                                                class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Delete
                                             </a>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div>
-                                                    <img src="" class="avatar avatar-sm me-3"
-                                                        alt="user2">
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">Programator</p>
-                                        </td>
-                                        <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm bg-gradient-secondary">Offline</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span class="text-secondary text-xs font-weight-bold">11/01/19</span>
-                                        </td>
-                                        <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
-                                                data-toggle="tooltip" data-original-title="Edit user">
-                                                Edit
-                                            </a>
-                                        </td>
-                                        <td class="align-middle">
-                                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
-                                                data-toggle="tooltip" data-original-title="Edit user">
-                                                Delete
-                                            </a>
-                                        </td>
-                                    </tr>
+                                    {{/each}}
                                 </tbody>
                             </table>
                         </div>
