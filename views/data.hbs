@@ -4,50 +4,55 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="../pages/dashboard.html">
+                <a class="nav-link " href="/home">
                     <span class="nav-link-text ms-1">Home</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  active" href="../pages/tables.html">
+                <a class="nav-link active " href="/data">
                     <span class="nav-link-text ms-1">Data</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="../pages/billing.html">
+                <a class="nav-link  " href="/addMenu">
                     <span class="nav-link-text ms-1">Add Dishes</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="../pages/billing.html">
+                <a class="nav-link  " href="/addTable">
                     <span class="nav-link-text ms-1">Add Table</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="../pages/billing.html">
+                <a class="nav-link  " href="/addCategory">
                     <span class="nav-link-text ms-1">Add Menu Category</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="../pages/billing.html">
+                <a class="nav-link  " href="/addTimeline">
                     <span class="nav-link-text ms-1">Add Timeline</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="../pages/billing.html">
-                    <span class="nav-link-text ms-1">Billing</span>
+                <a class="nav-link  " href="/booking">
+                    <span class="nav-link-text ms-1">Booking</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link  " href="/review">
+                    <span class="nav-link-text ms-1">Reviewer</span>
                 </a>
             </li>
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="../pages/profile.html">
+                <a class="nav-link  " href="/profile">
                     <span class="nav-link-text ms-1">Profile</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="../pages/sign-in.html">
+                <a class="nav-link  " href="/userInformation">
                     <span class="nav-link-text ms-1">User Information</span>
                 </a>
             </li>
@@ -89,7 +94,7 @@
                                         <td>
                                             <div class="d-flex px-2 py-1">
                                                 <div>
-                                                    <img src="{{image}}" class="avatar avatar-sm" alt="user1">
+                                                    <img src="{{image}}" class="rounded " alt="user1" style="width: 100px; height: 100px;">
                                                 </div>
                                             </div>
                                         </td>
@@ -109,7 +114,7 @@
                                             <span class="badge badge-sm bg-gradient-success">Online</span>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="#" class="text-center text-secondary font-weight-bold text-xs"
+                                            <a href="/getMenuById/{{_id}}" class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
@@ -156,15 +161,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {{#each table}}
                                     <tr>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">1</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{number}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">4</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{userNumber}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">1 PM</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{timeline_id.name}}</p>
                                         </td>
                                         <td>
                                             <p class="text-center text-xs font-weight-bold mb-0">null</p>
@@ -173,7 +179,7 @@
                                             <span class="badge badge-sm bg-gradient-success">Online</span>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;"
+                                            <a href="/getTableById/{{_id}}"
                                                 class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
@@ -187,6 +193,7 @@
                                             </a>
                                         </td>
                                     </tr>
+                                    {{/each}}
                                 </tbody>
                             </table>
                         </div>
@@ -224,7 +231,7 @@
                                         <td>
                                             <div class="d-flex px-2 py-1">
                                                 <div>
-                                                    <img src="{{image}}" class="avatar avatar-sm" alt="user1">
+                                                    <img src="{{image}}" class="rounded " alt="user1" style="width: 100px; height: 100px;">
                                                 </div>
                                             </div>
                                         </td>
@@ -238,14 +245,14 @@
                                             <span class="badge badge-sm bg-gradient-success">Online</span>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;"
+                                            <a href="/getCategoryById/{{_id}}"
                                                 class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;"
+                                            <a href=""
                                                 class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Delete
@@ -295,14 +302,14 @@
                                             <span class="badge badge-sm bg-gradient-success">Online</span>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;"
+                                            <a href="/getTimelineById/{{_id}}"
                                                 class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;"
+                                            <a href=""
                                                 class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Delete

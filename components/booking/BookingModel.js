@@ -4,7 +4,9 @@ const ObjectId = Schema.ObjectId;
 
 const booking = new Schema({
   id: { type: ObjectId },
-  day: { type: String },
+  dayBooking: { type: String },
+  timeCreate: { type: String },
+  dayCreate: { type: String },
   user_id: { type: ObjectId, ref: "user" },
   table_id: { type: ObjectId, ref: "table" },
 });

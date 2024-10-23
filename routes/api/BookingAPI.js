@@ -7,18 +7,63 @@ var userModel = require("../../components/user/UserModel");
 //localhost:3000/booking/add
 router.post('/add', async function (req, res, next) {
     try {
-        const { user_id, table_id, day } = req.body;
-        const addNew = { user_id, table_id, day };
-        await bookingModel.create(addNew);
-        const table = await tableModel.findById(table_id);
-        if (table) {
-            table.isOrder = true;
-            await table.save();
-            return res.json({ status: true, message: "Cập nhật trạng thái thành công" });
+        const { user_id, table_id, dayBooking } = req.body;
+        const currentDate = new Date();
+        let timeNow = currentDate.toLocaleTimeString('vi-VN');
+        let dayNow = currentDate.toLocaleDateString('vi-VN');
+
+        const [day, month, year] = dayBooking.split('/'); // dayBooking: 10/10/2024
+        const bookingDate = new Date(`${year}-${month}-${day}`);
+
+        const user = await userModel.findById(user_id);
+        const table = await tableModel.findById(table_id).populate('timeline_id');
+        const listBooking = await bookingModel.find().populate({
+            path: 'table_id',
+            populate: {
+                path: 'timeline_id',
+                select: 'name'
+            }
+        });
+
+        const addNew = { user_id, table_id, dayBooking, timeCreate: timeNow, dayCreate: dayNow };
+        let check = false;
+        if (user.name && user.phoneNumber) {
+            if (listBooking.length > 0) {
+                if (bookingDate < currentDate.setHours(0, 0, 0, 0)) {
+                    return res.status(400).json({ statusCode: 400, message: 'Ngày không hợp lệ' });
+                } else {
+                    listBooking.forEach(item => {
+                        if (item.dayBooking === dayBooking) {
+                            const timeTable = table.timeline_id.name;
+                            const timeItem = item.table_id.timeline_id.name;
+                            if (timeTable !== timeItem) {
+                                check = true;
+                            } else {
+                                check = false;
+                            }
+                        } else {
+                            check = true;
+                        }
+                    })
+                    const post = check && await bookingModel.create(addNew);
+                    return post ? res.status(200).json({ statusCode: 200, message: 'Đặt bàn thành công' }) :
+                        res.status(400).json({ statusCode: 400, message: 'Dat ban that bai 1' });
+                }
+            } else if (listBooking.length == 0) {
+                if (bookingDate < currentDate.setHours(0, 0, 0, 0)) {
+                    return res.status(400).json({ statusCode: 400, message: 'Ngày không hợp lệ' });
+                } else {
+                    const post = await bookingModel.create(addNew);
+                    return post ? res.status(200).json({ statusCode: 200, message: 'Đặt bàn thành công' }) :
+                        res.status(400).json({ statusCode: 400, message: 'Dat ban that bai 2' });
+                }
+            }
+
         } else {
-            return res.json({ status: true, message: "Cập nhật trạng thái thất bại" });
+            res.status(400).json({ statusCode: 400, message: 'Chua cap nhat thong tin ca nhan' })
         }
     } catch (error) {
+        console.log(error);
         res.status(400).json({ "status": false, "message": "That Bai" });
     }
 });
@@ -30,10 +75,10 @@ router.get('/getByUser/:id', async function (req, res, next) {
         if (!user) {
             return res.status(400).json({ "status": false, "message": "userId không tồn tại" });
         }
-        const listbooking = await bookingModel.find({ user_id: user._id }).populate('table_id');
-        res.status(200).json(listbooking);
+        const listBooking = await bookingModel.find({ user_id: user._id }).populate('table_id');
+        res.status(200).json({ "status": true, "message": "Thanh cong", listBooking });
     } catch (error) {
-        res.status(400).json({ "status": false, "message": "That Bai" });
+        res.status(400).json({ "status": false, "message": "That Bai", error });
     }
 });
 
@@ -53,13 +98,29 @@ router.get('/getByEmail', async function (req, res, next) {
 });
 
 //localhost:3000/booking/getByDay
-router.get('/getByDay', async function (req, res, next) {
+router.post('/getByDay', async function (req, res, next) {
     try {
-        const { day } = req.body;
-        const list = await bookingModel.find({ day: day }).populate('table_id');
-        res.status(200).json(list);
+        const currentDate = new Date();
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const year = currentDate.getFullYear();
+        const today = `${day}/${month}/${year}`;
+
+        const listBooking = await bookingModel.find({ dayBooking: today }).populate({
+            path: 'user_id',
+            select: 'email name phoneNumber'
+        })
+            .populate({
+                path: 'table_id',
+                populate: {
+                    path: 'timeline_id',
+                    select: 'name'
+                }
+            });
+
+        res.status(200).json({ "status": true, "message": "Thanh Cong", listBooking });
     } catch (error) {
-        res.status(400).json({ "status": false, "message": "That Bai" });
+        res.status(400).json({ "status": false, "message": "That Bai", error });
     }
 });
 

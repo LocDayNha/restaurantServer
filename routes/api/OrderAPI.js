@@ -14,7 +14,7 @@ router.post('/addNew', async function (req, res, next) {
         let totalMoney = 0;
         const currentDate = new Date();
         let timeNow = currentDate.toLocaleTimeString('vi-VN');
-        let dayNow = currentDate.toLocaleDateString('vi-VN'); 
+        let dayNow = currentDate.toLocaleDateString('vi-VN');
 
         dishes.forEach(dish => {  // forEach là một vòng lặp qua từng món ăn trong mảng dishes
             const menuItem = menuItems.find(item => item._id.toString() === dish._id);
@@ -44,95 +44,192 @@ router.get('/get', async function (req, res, next) {
     }
 });
 
-//localhost:3000/order/getByDay
-router.get('/getByDay', async function (req, res, next) {
+//localhost:3000/order/getOrderByDay
+router.get('/getOrderByDay', async function (req, res, next) {
     try {
-        const startOfDay = new Date();
-        startOfDay.setHours(0, 0, 0, 0);
-        const endOfDay = new Date();
-        endOfDay.setHours(23, 59, 59, 999);
 
-        const orders = await orderModel.find({ createAt: { $gte: startOfDay, $lte: endOfDay } });
+        const data = [
+            {
+                "_id": "6714a1ce6cd9ac454aee2c2c",
+                "dayOrder": "20/01/2024",
+                "quantity": 5,
+                "totalMoney": 500000,
+            },
+            {
+                "_id": "6714a1ce6cd9ac454aee2c2c",
+                "dayOrder": "25/01/2024",
+                "quantity": 4,
+                "totalMoney": 500000,
+            },
+            {
+                "_id": "6714b2856cd9ac454aee2c89",
+                "dayOrder": "20/02/2024",
+                "quantity": 8,
+                "totalMoney": 800000,
+            },
+            {
+                "_id": "6714b9a96cd9ac454aee2c9d",
+                "dayOrder": "20/03/2024",
+                "quantity": 4,
+                "totalMoney": 400000,
+            },
+            {
+                "_id": "6714b9a96cd9ac454aee2c9d",
+                "dayOrder": "30/03/2024",
+                "quantity": 7,
+                "totalMoney": 400000,
+            },
+            {
+                "_id": "6714b9ee6cd9ac454aee2ca0",
+                "dayOrder": "20/04/2024",
+                "quantity": 3,
+                "totalMoney": 300000,
+            },
+            {
+                "_id": "6714b9ee6cd9ac454aee2ca0",
+                "dayOrder": "13/04/2024",
+                "quantity": 3,
+                "totalMoney": 300000,
+            },
+            {
+                "_id": "671664b5a39d57ba57a959d4",
+                "dayOrder": "21/05/2024",
+                "quantity": 5,
+                "totalMoney": 500000,
+            }
+        ];
 
-        // Tính tổng số lượng và tổng tiền từ các đơn hàng
+        const today = new Date();
+        const formatDate = (date) => {
+            const day = ('0' + date.getDate()).slice(-2);
+            const month = ('0' + (date.getMonth() + 1)).slice(-2);
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        };
+
+        const todayString = formatDate(today);
+
+        const orders = await orderModel.find({ dayOrder: todayString });
+
         let totalQuantity = 0;
         let totalMoney = 0;
 
-        orders.forEach(order => {
-            totalQuantity += order.quantity;
-            totalMoney += order.totalMoney;
+        orders.forEach(item => {
+            totalQuantity += item.quantity;
+            totalMoney += item.totalMoney;
         });
 
         // Trả về kết quả
         return res.status(200).json({
-            "status": true, "message": "Thanh Cong", "orders": orders,
-            "totalQuantity": totalQuantity,
-            "totalMoney": totalMoney
-        });
-    } catch (error) {
-        return res.status(400).json({ "status": false, "message": "That Bai" });
-    }
-});
-
-//localhost:3000/order/getByMonth
-router.get('/getByMonth', async function (req, res, next) {
-    try {
-
-        const month = parseInt(req.query.month) || (new Date()).getMonth() + 1; // getMonth() trả về giá trị từ 0-11, nên cần +1
-        const year = parseInt(req.query.year) || (new Date()).getFullYear();
-
-        const startOfMonth = new Date(year, month - 1, 1);
-        const endOfMonth = new Date(year, month, 0);
-        endOfMonth.setHours(23, 59, 59, 999);
-
-        const orders = await orderModel.find({ createAt: { $gte: startOfMonth, $lte: endOfMonth } });
-
-        let totalQuantity = 0;
-        let totalMoney = 0;
-
-        orders.forEach(order => {
-            totalQuantity += order.quantity;
-            totalMoney += order.totalMoney;
-        });
-
-        // Trả về kết quả
-        return res.status(200).json({
-            "status": true, "message": "Thanh Cong",
-            "orders": orders,
+            "status": true,
+            "message": "Thành Công",
             "totalQuantity": totalQuantity,
             "totalMoney": totalMoney,
-            "month": month,
-            "year": year
+            "orderCount": orders.length, // Số lượng đơn hàng
+            "today": todayString
         });
     } catch (error) {
         return res.status(400).json({ "status": false, "message": "That Bai", "error": error.message });
     }
 });
 
-//localhost:3000/order/getByYear
-router.get('/getByYear', async function (req, res, next) {
+//localhost:3000/order/getOrderByYear
+router.get('/getOrderByYear', async function (req, res, next) {
     try {
-        const year = parseInt(req.query.year) || (new Date()).getFullYear();
 
-        const startOfYear = new Date(year, 0, 1); // Tháng 0 là tháng 1 (tháng 1 - 12)
-        const endOfYear = new Date(year, 11, 31); // Tháng 11 là tháng 12 (tháng 12 - 12)
-        endOfYear.setHours(23, 59, 59, 999);
+        const data = [
+            {
+                "_id": "6714a1ce6cd9ac454aee2c2c",
+                "dayOrder": "20/01/2024",
+                "quantity": 5,
+                "totalMoney": 500000,
+            },
+            {
+                "_id": "6714a1ce6cd9ac454aee2c2c",
+                "dayOrder": "25/01/2024",
+                "quantity": 4,
+                "totalMoney": 500000,
+            },
+            {
+                "_id": "6714b2856cd9ac454aee2c89",
+                "dayOrder": "20/02/2024",
+                "quantity": 8,
+                "totalMoney": 800000,
+            },
+            {
+                "_id": "6714b9a96cd9ac454aee2c9d",
+                "dayOrder": "20/03/2024",
+                "quantity": 4,
+                "totalMoney": 400000,
+            },
+            {
+                "_id": "6714b9a96cd9ac454aee2c9d",
+                "dayOrder": "30/03/2024",
+                "quantity": 7,
+                "totalMoney": 400000,
+            },
+            {
+                "_id": "6714b9ee6cd9ac454aee2ca0",
+                "dayOrder": "20/04/2024",
+                "quantity": 3,
+                "totalMoney": 300000,
+            },
+            {
+                "_id": "6714b9ee6cd9ac454aee2ca0",
+                "dayOrder": "13/04/2024",
+                "quantity": 3,
+                "totalMoney": 300000,
+            },
+            {
+                "_id": "671664b5a39d57ba57a959d4",
+                "dayOrder": "21/05/2024",
+                "quantity": 5,
+                "totalMoney": 500000,
+            }
+        ];
 
-        const orders = await orderModel.find({ createAt: { $gte: startOfYear, $lte: endOfYear } });
+        const year = parseInt(req.query.year) || new Date().getFullYear();
 
-        let totalQuantity = 0;
-        let totalMoney = 0;
+        const formatDate = (date) => {
+            const day = ('0' + date.getDate()).slice(-2);
+            const month = ('0' + (date.getMonth() + 1)).slice(-2);
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        };
 
-        orders.forEach(order => {
-            totalQuantity += order.quantity;
-            totalMoney += order.totalMoney;
+        const startOfYear = formatDate(new Date(year, 0, 1));
+        const endOfYear = formatDate(new Date(year, 11, 31));
+
+        const orders = await orderModel.find({
+            dayOrder: { $gte: startOfYear, $lte: endOfYear }
         });
 
+        const quantityData = new Array(12).fill(0);
+        const moneyData = new Array(12).fill(0);
+        const orderData = new Array(12).fill(0);
+
+        orders.forEach(order => {
+            const orderDate = new Date(order.dayOrder.split('/').reverse().join('-'));
+            const month = orderDate.getMonth();
+
+            if (orderDate.getFullYear() === year) {
+                quantityData[month] += order.quantity;
+                moneyData[month] += order.totalMoney;
+                orderData[month] += 1;
+            }
+        });
+
+        const quantity = quantityData.reduce((acc, val) => acc + val, 0);
+        const money = moneyData.reduce((acc, val) => acc + val, 0);      
+        const orderr = orderData.reduce((acc, val) => acc + val, 0);
+
+        // Trả về kết quả
         return res.status(200).json({
-            "status": true, "message": "Thanh Cong",
-            "orders": orders,
-            "totalQuantity": totalQuantity,
-            "totalMoney": totalMoney,
+            "status": true,
+            "message": "Thanh Cong",
+            "quantityData": quantityData,
+            "moneyData": moneyData,
+            "orderData": orderData,
             "year": year
         });
     } catch (error) {

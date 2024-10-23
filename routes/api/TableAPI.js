@@ -8,7 +8,10 @@ var timelineModel = require("../../components/timeline/TimelineModel");
 router.post('/add', async function (req, res, next) {
     try {
         const { number, userNumber, timeline_id } = req.body;
-        const addNew = { number, userNumber, timeline_id };
+        const currentDate = new Date();
+        let dayNow = currentDate.toLocaleDateString('vi-VN');
+        const addNew = { number, userNumber, timeline_id, createAt: dayNow };
+
         await tableModel.create(addNew);
         res.status(200).json({ "status": true, "message": "Thanh Cong" });
     } catch (error) {
@@ -20,8 +23,7 @@ router.post('/add', async function (req, res, next) {
 router.post('/getByNumber', async function (req, res, next) {
     try {
         const { number } = req.body;
-        const isOrder = false;
-        const list = await tableModel.find({ number: number, isOrder: isOrder }).populate('timeline_id');
+        const list = await tableModel.find({ number: number}).populate('timeline_id');
         res.status(200).json(list);
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai" });
