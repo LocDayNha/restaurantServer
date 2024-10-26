@@ -140,6 +140,29 @@ router.post('/login', [validationLogin], async function (req, res, next) {
     }
 });
 
+router.post('/loginGoogle', async function (req, res, next) {
+    try {
+        const { email, name, image } = req.body;
+
+        if (!email || !name || !image) {
+            return res.status(400).json({ status: false, message: "Đăng nhập Google thất bại" });
+        } else {
+            const userMail = await userModel.findOne({ email: email });
+
+            if (userMail) {
+                return res.status(200).json({ status: true, message: "Đăng nhập Google thành công", userMail });
+            } else {
+                const newUser = { email, name, image };
+                const user = new userModel(newUser);
+                await user.save();
+                return res.status(200).json({ status: true, message: "Đăng nhập Google thành công", userMail });
+            }
+        }
+    } catch (error) {
+        return res.status(500).json({ "status": false, "message": "Loi he thong", error });
+    }
+});
+
 //localhost:3000/user/sent-code                              forgotpass
 router.post('/sent-code', async function (req, res, next) {
     try {
