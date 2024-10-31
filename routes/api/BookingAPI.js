@@ -30,7 +30,7 @@ router.post('/add', async function (req, res, next) {
         if (user.name && user.phoneNumber) {
             if (listBooking.length > 0) {
                 if (bookingDate < currentDate.setHours(0, 0, 0, 0)) {
-                    return res.status(400).json({ statusCode: 400, message: 'Ngày không hợp lệ' });
+                    return res.status(400).json({ result: false, message: 'Ngày không hợp lệ' });
                 } else {
                     listBooking.forEach(item => {
                         if (item.dayBooking === dayBooking) {
@@ -46,25 +46,25 @@ router.post('/add', async function (req, res, next) {
                         }
                     })
                     const post = check && await bookingModel.create(addNew);
-                    return post ? res.status(200).json({ statusCode: 200, message: 'Đặt bàn thành công' }) :
-                        res.status(400).json({ statusCode: 400, message: 'Dat ban that bai 1' });
+                    return post ? res.status(200).json({ status: 200, message: 'Đặt bàn thành công' }) :
+                        res.status(400).json({ result: false, message: 'Đặt bàn thất bại' });
                 }
             } else if (listBooking.length == 0) {
                 if (bookingDate < currentDate.setHours(0, 0, 0, 0)) {
-                    return res.status(400).json({ statusCode: 400, message: 'Ngày không hợp lệ' });
+                    return res.status(400).json({ result: false, message: 'Ngày không hợp lệ' });
                 } else {
                     const post = await bookingModel.create(addNew);
                     return post ? res.status(200).json({ statusCode: 200, message: 'Đặt bàn thành công' }) :
-                        res.status(400).json({ statusCode: 400, message: 'Dat ban that bai 2' });
+                        res.status(400).json({ result: false, message: 'Đặt bàn thất bại' });
                 }
             }
 
         } else {
-            res.status(400).json({ statusCode: 400, message: 'Chua cap nhat thong tin ca nhan' })
+            res.status(400).json({ result: false, message: 'Chưa cập nhật thông tin cá nhân' })
         }
     } catch (error) {
         console.log(error);
-        res.status(400).json({ "status": false, "message": "That Bai" });
+        res.status(400).json({ result: false, message: "Thất bại" });
     }
 });
 
@@ -75,10 +75,17 @@ router.get('/getByUser/:id', async function (req, res, next) {
         if (!user) {
             return res.status(400).json({ "status": false, "message": "userId không tồn tại" });
         }
-        const listBooking = await bookingModel.find({ user_id: user._id }).populate('table_id');
-        res.status(200).json({ "status": true, "message": "Thanh cong", listBooking });
+        const listBooking = await bookingModel.find({ user_id: user._id }).populate({
+            path: 'table_id',
+            populate: {
+                path: 'timeline_id',
+                select: 'name'
+            }
+        });
+        res.status(200).json({ result: true, message: "Thanh cong", listBooking });
     } catch (error) {
-        res.status(400).json({ "status": false, "message": "That Bai", error });
+        console.log(error);
+        res.status(400).json({ result: false, message: "That Bai" });
     }
 });
 
