@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
+var crypto = require('crypto');
 var mongoose = require('mongoose');
 
 require("./components/user/UserModel");
@@ -21,6 +22,7 @@ var bookingRouter = require("./routes/api/BookingAPI");
 var timelineRouter = require("./routes/api/TimelineAPI");
 var categoryRouter = require("./routes/api/CategoryAPI");
 var orderRouter = require("./routes/api/OrderAPI");
+var paymentRouter = require("./routes/api/PaymentAPI");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -53,6 +55,7 @@ app.use('/booking', bookingRouter);
 app.use('/timeline', timelineRouter);
 app.use('/category', categoryRouter);
 app.use('/order', orderRouter);
+app.use('/payment', paymentRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
