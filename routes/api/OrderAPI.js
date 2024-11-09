@@ -44,6 +44,22 @@ router.get('/get', async function (req, res, next) {
     }
 });
 
+//localhost:3000/order/getToday
+router.get('/getToday', async function (req, res, next) {
+    try {
+        const currentDate = new Date();
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const year = currentDate.getFullYear();
+        const today = `${day}/${month}/${year}`;
+
+        const list = await orderModel.find({dayOrder: today});
+        return res.status(200).json(list);
+    } catch (error) {
+        return res.status(400).json({ "status": false, "message": "That Bai" });
+    }
+});
+
 //localhost:3000/order/getOrderByDay
 router.get('/getOrderByDay', async function (req, res, next) {
     try {

@@ -140,6 +140,7 @@ router.post('/login', [validationLogin], async function (req, res, next) {
     }
 });
 
+//localhost:3000/user/loginGoogle
 router.post('/loginGoogle', async function (req, res, next) {
     try {
         const { email, name, image } = req.body;
@@ -153,9 +154,33 @@ router.post('/loginGoogle', async function (req, res, next) {
                 return res.status(200).json({ status: true, message: "Đăng nhập Google thành công", userMail });
             } else {
                 const newUser = { email, name, image };
-                const user = new userModel(newUser);
-                await user.save();
+                const userMail = new userModel(newUser);
+                await userMail.save();
                 return res.status(200).json({ status: true, message: "Đăng nhập Google thành công", userMail });
+            }
+        }
+    } catch (error) {
+        return res.status(500).json({ "status": false, "message": "Loi he thong", error });
+    }
+});
+
+//localhost:3000/user/loginFacebook
+router.post('/loginFacebook', async function (req, res, next) {
+    try {
+        const { email, name } = req.body;
+
+        if (!email || !name) {
+            return res.status(400).json({ status: false, message: "Đăng nhập Facebook thất bại" });
+        } else {
+            const userMail = await userModel.findOne({ email: email });
+
+            if (userMail) {
+                return res.status(200).json({ status: true, message: "Đăng nhập Facebook thành công", userMail });
+            } else {
+                const newUser = { email, name };
+                const userMail = new userModel(newUser);
+                await userMail.save();
+                return res.status(200).json({ status: true, message: "Đăng nhập Facebook thành công", userMail });
             }
         }
     } catch (error) {
