@@ -220,7 +220,7 @@ router.get('/getOrderByYear', async function (req, res, next) {
         });
 
         const quantity = quantityData.reduce((acc, val) => acc + val, 0);
-        const money = moneyData.reduce((acc, val) => acc + val, 0);      
+        const money = moneyData.reduce((acc, val) => acc + val, 0);
         const orderr = orderData.reduce((acc, val) => acc + val, 0);
 
         // Trả về kết quả
@@ -252,30 +252,14 @@ router.get('/getById/:id', async function (req, res, next) {
 router.post('/edit/:id', async function (req, res, next) {
     try {
         const { id } = req.params;
-        const { dishes } = req.body;
+        const { isPayment } = req.body;
 
         const list = await orderModel.findById(id);
 
         if (list) {
-            list.dishes = dishes ? dishes : list.dishes;
-
-            let totalQuantity = 0;
-            let totalMoney = 0;
-
-            const menuIds = list.dishes.map(dish => dish.menuId);
-            const menuItems = await menuModel.find({ _id: { $in: menuIds } });
-
-            list.dishes.forEach(dish => {
-                const menuItem = menuItems.find(item => item._id.toString() === dish.menuId);
-                if (menuItem) {
-                    totalQuantity += parseInt(dish.quantity, 10);
-                    totalMoney += menuItem.price * parseInt(dish.quantity, 10);
-                }
-            });
-
-            list.quantity = totalQuantity;
-            list.totalMoney = totalMoney;
-
+            if (isPayment !== undefined) {
+                list.isPayment = isPayment;
+            }
             await list.save();
             res.status(200).json({ "status": true, "message": "Thanh Cong" });
         } else {

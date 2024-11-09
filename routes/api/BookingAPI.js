@@ -105,7 +105,7 @@ router.get('/getByEmail', async function (req, res, next) {
 });
 
 //localhost:3000/booking/getByDay
-router.post('/getByDay', async function (req, res, next) {
+router.get('/getByDay', async function (req, res, next) {
     try {
         const currentDate = new Date();
         const day = String(currentDate.getDate()).padStart(2, '0');
@@ -124,7 +124,6 @@ router.post('/getByDay', async function (req, res, next) {
                     select: 'name'
                 }
             });
-
         res.status(200).json({ "status": true, "message": "Thanh Cong", listBooking });
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai", error });

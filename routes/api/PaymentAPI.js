@@ -5,23 +5,24 @@ var ip = require('ip');
 var querystring = require('qs');
 var crypto = require('crypto');
 const request = require('request');
+var orderModel = require("../../components/order/OrderModel");
 
-//localhost:3000/payment/vnpay/create_payment_url
+//localhost:3000/payment/vnpay/create_payment_url?amount=&idItemOrder=
 router.get('/vnpay/create_payment_url', function (req, res, next) {
     try {
-        let { amount } = req.query;
+        let { amount, idItemOrder } = req.query;
         var ipAddr = '127.0.0.1';
         let tmnCode = process.env.VNPAY_TMN_CODE;
         var secretKey = process.env.VNPAY_SECRET_KEY;
         var vnpUrl = process.env.VNPAY_PAYMENT_ENDPOINT;
-        var returnUrl = `http://${ip.address()}:3000/api/payment/vnpay/result`;
+        var returnUrl = `http://${ip.address()}:3000/payment/vnpay/result`;
         var date = new Date();
 
         var createDate = moment(date).format('YYYYMMDDHHmmss');
         var orderId = crypto.randomUUID().slice(0, 6).toUpperCase();
         var bankCode = '';
 
-        var orderInfo = 'Thanh Toan Cho Ma Giao Dich ' + orderId;
+        var orderInfo = 'Thanh Toan Cho Ma Giao Dich ' + idItemOrder;
         var orderType = 'other';
         var locale = 'vn';
         var currCode = 'VND';
@@ -32,7 +33,7 @@ router.get('/vnpay/create_payment_url', function (req, res, next) {
         // vnp_Params['vnp_Merchant'] = ''
         vnp_Params['vnp_Locale'] = locale;
         vnp_Params['vnp_CurrCode'] = currCode;
-        vnp_Params['vnp_TxnRef'] = orderId;
+        vnp_Params['vnp_TxnRef'] = idItemOrder;
         vnp_Params['vnp_OrderInfo'] = orderInfo;
         vnp_Params['vnp_OrderType'] = orderType;
         vnp_Params['vnp_Amount'] = amount * 100;
@@ -71,12 +72,25 @@ router.get('/vnpay/result', function (req, res, next) {
     let hmac = crypto.createHmac('sha512', secretKey);
     let signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
 
+    if (vnp_Params['vnp_ResponseCode'] === '00') {
+        const updateOrder = async () => {
+            return await orderModel.findByIdAndUpdate(vnp_Params['vnp_TxnRef'],
+                {
+                    $set: {
+                        isPayment: true
+                    }
+                }
+            )
+        }
+        updateOrder();
+    }
+
     if (secureHash === signed) {
         //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
 
         return res.status(200).json({
             responseCode: vnp_Params['vnp_ResponseCode'],
-            transactionRef: vnp_Params['vnp_TxnRef'],
+            orderId: vnp_Params['vnp_TxnRef'],
             amount: vnp_Params['vnp_Amount'] / 100,
             vendor: vnp_Params['vnp_BankCode'],
             description: vnp_Params['vnp_OrderInfo'],
