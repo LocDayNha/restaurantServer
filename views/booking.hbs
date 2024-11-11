@@ -86,8 +86,6 @@
                                             Time</th>
                                         <th class="text-center text-secondary opacity-7">
                                             Day Booking</th>
-                                        <th class="text-center text-secondary opacity-7"></th>
-                                        <th class="text-center text-secondary opacity-7"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -101,31 +99,22 @@
                                             </p>
                                         </td>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">{{user_id.phoneNumber}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{user_id.phoneNumber}}
+                                            </p>
                                         </td>
                                         <td>
                                             <p class="text-center text-xs font-weight-bold mb-0">{{table_id.number}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">{{table_id.userNumber}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{table_id.userNumber}}
+                                            </p>
                                         </td>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">{{table_id.timeline_id.name}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">
+                                                {{table_id.timeline_id.name}}</p>
                                         </td>
                                         <td>
                                             <p class="text-center text-xs font-weight-bold mb-0">{{dayBooking}}</p>
-                                        </td>
-                                        <td class="align-middle">
-                                            <a href="" class="text-center text-secondary font-weight-bold text-xs"
-                                                data-toggle="tooltip" data-original-title="Edit user">
-                                                Edit
-                                            </a>
-                                        </td>
-                                        <td class="align-middle">
-                                            <a href="#" class="text-center text-secondary font-weight-bold text-xs"
-                                                data-toggle="tooltip" data-original-title="Edit user">
-                                                Delete
-                                            </a>
                                         </td>
                                     </tr>
                                     {{/each}}
