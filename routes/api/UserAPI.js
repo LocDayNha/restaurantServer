@@ -167,9 +167,9 @@ router.post('/loginGoogle', async function (req, res, next) {
 //localhost:3000/user/loginFacebook
 router.post('/loginFacebook', async function (req, res, next) {
     try {
-        const { email, name } = req.body;
+        const { email, name, image } = req.body;
 
-        if (!email || !name) {
+        if (!email || !name || !image) {
             return res.status(400).json({ status: false, message: "Đăng nhập Facebook thất bại" });
         } else {
             const userMail = await userModel.findOne({ email: email });
@@ -177,7 +177,7 @@ router.post('/loginFacebook', async function (req, res, next) {
             if (userMail) {
                 return res.status(200).json({ status: true, message: "Đăng nhập Facebook thành công", userMail });
             } else {
-                const newUser = { email, name };
+                const newUser = { email, name, image };
                 const userMail = new userModel(newUser);
                 await userMail.save();
                 return res.status(200).json({ status: true, message: "Đăng nhập Facebook thành công", userMail });
