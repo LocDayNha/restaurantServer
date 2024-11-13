@@ -14,6 +14,7 @@ require("./components/booking/BookingModel");
 require("./components/timeline/TimelineModel");
 require("./components/category/CategoryModel");
 require("./components/order/OrderModel");
+require("./components/ratingfood/RatingFoodModel");
 
 var userRouter = require("./routes/api/UserAPI");
 var menuRouter = require("./routes/api/MenuAPI");
@@ -23,6 +24,7 @@ var timelineRouter = require("./routes/api/TimelineAPI");
 var categoryRouter = require("./routes/api/CategoryAPI");
 var orderRouter = require("./routes/api/OrderAPI");
 var paymentRouter = require("./routes/api/PaymentAPI");
+var ratingfoodRouter = require("./routes/api/RatingFoodAPI");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -56,6 +58,7 @@ app.use('/timeline', timelineRouter);
 app.use('/category', categoryRouter);
 app.use('/order', orderRouter);
 app.use('/payment', paymentRouter);
+app.use('/ratingfood', ratingfoodRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
