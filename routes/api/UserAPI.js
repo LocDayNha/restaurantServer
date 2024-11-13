@@ -24,7 +24,10 @@ router.post('/register', [validationRegister], async function (req, res, next) {
             return res.status(400).json({ result: false, message: 'Email đã được đăng ký' });
         }
 
-        const register = { email, password, createAt, isVerified: false };
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(password, salt);
+
+        const register = { email, password: hash, createAt, isVerified: false };
         const user = new userModel(register);
         await user.save();
         return res.status(200).json({ status: true, message: "Đăng ký thành công" });
@@ -117,7 +120,9 @@ router.post('/login', [validationLogin], async function (req, res, next) {
         } else if (userMail.isVerified !== true) {
             return res.status(400).json({ "status": false, "message": "Email chưa được xác thực" });
         } else {
-            if (userMail.password === password) {
+            const result = bcrypt.compareSync(password, userMail.password);
+
+            if (result) {
                 const { password, ...newUser } = userMail._doc;
                 const token = JWT.sign({ newUser }, config.SECRETKEY, { expiresIn: '1h' });
                 const returnData = {
