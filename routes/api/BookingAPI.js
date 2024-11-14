@@ -12,7 +12,7 @@ router.post('/add', async function (req, res, next) {
         let timeNow = currentDate.toLocaleTimeString('vi-VN');
         let dayNow = currentDate.toLocaleDateString('vi-VN');
 
-        const [day, month, year] = dayBooking.split('/'); // dayBooking: 10/10/2024
+        const [day, month, year] = dayBooking.split('/'); // dayBooking: 06/10/2024
         const bookingDate = new Date(`${year}-${month}-${day}`);
 
         const user = await userModel.findById(user_id);
@@ -29,8 +29,8 @@ router.post('/add', async function (req, res, next) {
         let check = false;
         if (user.name && user.phoneNumber) {
             if (listBooking.length > 0) {
-                if (bookingDate < currentDate.setHours(0, 0, 0, 0)) {
-                    return res.status(400).json({ result: false, message: 'Ngày không hợp lệ' });
+                if (bookingDate <= currentDate.setHours(0, 0, 0, 0)) {
+                    return res.status(400).json({ status: false, result: false, message: 'Ngày không hợp lệ' });
                 } else {
                     listBooking.forEach(item => {
                         if (item.dayBooking === dayBooking) {
@@ -46,16 +46,16 @@ router.post('/add', async function (req, res, next) {
                         }
                     })
                     const post = check && await bookingModel.create(addNew);
-                    return post ? res.status(200).json({ status: 200, message: 'Đặt bàn thành công' }) :
-                        res.status(400).json({ result: false, message: 'Đặt bàn thất bại' });
+                    return post ? res.status(200).json({ status: true, message: 'Đặt bàn thành công' }) :
+                        res.status(400).json({status: false, result: false, message: 'Đặt bàn thất bại' });
                 }
             } else if (listBooking.length == 0) {
-                if (bookingDate < currentDate.setHours(0, 0, 0, 0)) {
-                    return res.status(400).json({ result: false, message: 'Ngày không hợp lệ' });
+                if (bookingDate <= currentDate.setHours(0, 0, 0, 0)) {
+                    return res.status(400).json({status: false, result: false, message: 'Ngày không hợp lệ' });
                 } else {
                     const post = await bookingModel.create(addNew);
-                    return post ? res.status(200).json({ statusCode: 200, message: 'Đặt bàn thành công' }) :
-                        res.status(400).json({ result: false, message: 'Đặt bàn thất bại' });
+                    return post ? res.status(200).json({ status: true, message: 'Đặt bàn thành công' }) :
+                        res.status(400).json({status: false, result: false, message: 'Đặt bàn thất bại' });
                 }
             }
 

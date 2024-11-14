@@ -53,7 +53,7 @@ router.get('/getToday', async function (req, res, next) {
         const year = currentDate.getFullYear();
         const today = `${day}/${month}/${year}`;
 
-        const list = await orderModel.find({dayOrder: today});
+        const list = await orderModel.find({ dayOrder: today }).sort({ isPayment: 1 });
         return res.status(200).json(list);
     } catch (error) {
         return res.status(400).json({ "status": false, "message": "That Bai" });
