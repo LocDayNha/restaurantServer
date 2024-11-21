@@ -76,7 +76,7 @@ router.post('/upload-image-firebase', [upload_firebase.single('image')], async (
 //localhost:3000/menu/get
 router.get('/get', async function (req, res, next) {
     try {
-        const list = await menuModel.find().populate('category');
+        const list = await menuModel.find({ isActive: true }).populate('category');
         res.status(200).json(list);
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai" });
@@ -90,7 +90,7 @@ router.get('/getByCategory/:id', async function (req, res, next) {
         if (!category) {
             return res.status(400).json({ "status": false, "message": "Danh mục không tồn tại" });
         }
-        const list = await menuModel.find({ category: category._id }).populate('category');
+        const list = await menuModel.find({ category: category._id, isActive: true }).populate('category');
         res.status(200).json(list);
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai" });
@@ -108,6 +108,23 @@ router.get('/getByName', async function (req, res, next) {
     }
 });
 
+//localhost:3000/menu/getById
+router.get('/getById/:id', async function (req, res, next) {
+    try {
+        const { id } = req.params;
+        
+        const listData = await menuModel.findById(id);
+
+        if (listData) {
+            res.status(200).json({ "status": true, "message": "Thanh Cong", listData });
+        } else {
+            res.status(400).json({ "status": false, "message": "That Bai" });
+        }
+    } catch (error) {
+        res.status(400).json({ "status": false, "message": "That Bai" });
+    }
+});
+
 //localhost:3000/menu/editById
 router.post('/editById/:id', async function (req, res, next) {
     try {
@@ -120,6 +137,8 @@ router.post('/editById/:id', async function (req, res, next) {
             itemEdit.image = image ? image : itemEdit.image;
             itemEdit.category = category ? category : itemEdit.category;
             itemEdit.quantity = quantity ? quantity : itemEdit.quantity;
+            itemEdit.description = description ? description : itemEdit.description;
+            itemEdit.isActive = isActive ? isActive : itemEdit.isActive;
             await itemEdit.save();
             res.status(200).json({ "status": true, "message": "Thanh Cong" });
         } else {

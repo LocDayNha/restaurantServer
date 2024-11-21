@@ -23,7 +23,7 @@ router.post('/add', async function (req, res, next) {
 router.post('/getByNumber', async function (req, res, next) {
     try {
         const { number } = req.body;
-        const list = await tableModel.find({ number: number}).populate('timeline_id');
+        const list = await tableModel.find({ number: number, isActive: true }).populate('timeline_id');
         res.status(200).json(list);
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai" });
@@ -34,7 +34,7 @@ router.post('/getByNumber', async function (req, res, next) {
 router.get('/getById/:id', async function (req, res, next) {
     try {
         const { id } = req.params;
-        const list = await tableModel.findById(id).populate('timeline_id');
+        const list = await tableModel.findOne({ _id: id, isActive: true }).populate('timeline_id');
         res.status(200).json(list);
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai" });
@@ -49,6 +49,7 @@ router.post('/editById/:id', async function (req, res, next) {
         const itemEdit = await tableModel.findById(id);
         if (itemEdit) {
             itemEdit.timeline_id = timeline_id ? timeline_id : itemEdit.timeline_id;
+            itemEdit.isActive = isActive ? isActive : itemEdit.isActive;
             await itemEdit.save();
             res.status(200).json({ "status": true, "message": "Thanh Cong" });
         } else {

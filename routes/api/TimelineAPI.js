@@ -17,7 +17,7 @@ router.post('/add', async function (req, res, next) {
 //localhost:3000/timeline/get
 router.get('/get', async function (req, res, next) {
     try {
-        const list = await timelineModel.find();
+        const list = await timelineModel.find({ isActive: true });
         res.status(200).json(list);
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai" });
@@ -32,6 +32,7 @@ router.post('/editById/:id', async function (req, res, next) {
         const itemEdit = await timelineModel.findById(id);
         if (itemEdit) {
             itemEdit.name = name ? name : itemEdit.name;
+            itemEdit.isActive = isActive ? isActive : itemEdit.isActive;
             await itemEdit.save();
             res.status(200).json({ "status": true, "message": "Thanh Cong" });
         } else {

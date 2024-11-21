@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
+const moment = require('moment');
 var bookingModel = require("../../components/booking/BookingModel");
 var tableModel = require("../../components/table/TableModel");
 var userModel = require("../../components/user/UserModel");
+var sendMail = require("../utils/mail");
 
 //localhost:3000/booking/add
 router.post('/add', async function (req, res, next) {
@@ -155,6 +157,161 @@ router.delete('/deleteById/:id', async function (req, res, next) {
         res.status(400).json({ "status": false, "message": "That Bai" });
     }
 });
+
+//localhost:3000/booking/notification
+router.get('/notification', async function (req, res, next) {
+    try {
+        const tomorrow = moment().add(1, 'days').format('DD/MM/YYYY');
+
+        const listEmailBooking = await bookingModel.find({ dayBooking: tomorrow }).populate([
+            {
+                path: 'table_id',
+                populate: {
+                    path: 'timeline_id',
+                    select: 'name'
+                }
+            },
+            {
+                path: 'user_id',
+                select: 'name email'
+            }
+        ]);
+
+        const userInfor = listEmailBooking.map(booking => ({
+            name: booking.user_id.name,
+            email: booking.user_id.email,
+            dayBooking: booking.dayBooking,
+            timeline: booking.table_id.timeline_id.name
+        }));
+        console.log('userInfor:', userInfor);
+
+        // Lặp qua từng người dùng để gửi email
+        for (const user of userInfor) {
+            const { name, email, dayBooking, timeline } = user;
+
+            const subject = 'Thông Báo Đặt Bàn - Phoenix Restaurant';
+            const content = `
+                <!DOCTYPE html>
+                <html lang="vi">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Thông Báo Đặt Bàn - Phoenix Restaurant</title>
+                    <style>
+                        body {
+                            font-family: 'Arial', sans-serif;
+                            background-color: #f4f4f9;
+                            margin: 0;
+                            padding: 0;
+                            color: #333;
+                        }
+                        .container {
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background-color: #ffffff;
+                            padding: 30px;
+                            border-radius: 10px;
+                            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                            border: 1px solid #e5e5e5;
+                        }
+                        .header {
+                            text-align: center;
+                            margin-bottom: 30px;
+                        }
+                        .header img {
+                            max-width: 180px;
+                            height: auto;
+                            margin-bottom: 20px;
+                        }
+                        .header h1 {
+                            color: #d9534f;
+                            font-size: 32px;
+                            margin-bottom: 10px;
+                        }
+                        .header p {
+                            font-size: 18px;
+                            color: #555;
+                            margin-top: 0;
+                        }
+                        .content {
+                            font-size: 16px;
+                            line-height: 1.7;
+                            color: #555;
+                            margin-bottom: 30px;
+                        }
+                        .content p {
+                            margin: 12px 0;
+                        }
+                        .highlight {
+                            color: #d9534f;
+                            font-weight: bold;
+                        }
+                        .footer {
+                            text-align: center;
+                            font-size: 14px;
+                            color: #777;
+                            margin-top: 40px;
+                            border-top: 1px solid #e5e5e5;
+                            padding-top: 20px;
+                        }
+                        .footer a {
+                            color: #d9534f;
+                            text-decoration: none;
+                        }
+                        .footer a:hover {
+                            text-decoration: underline;
+                        }
+                        /* Responsive styling for smaller screens */
+                        @media (max-width: 600px) {
+                            .container {
+                                padding: 20px;
+                            }
+                            .header h1 {
+                                font-size: 28px;
+                            }
+                            .content {
+                                font-size: 14px;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/phoenix-restaurant-401d8.appspot.com/o/343aa513-aed5-41e9-862c-687833e00b31.png?alt=media&token=b39280de-e844-41ec-b81f-d07ca5661c39" alt="Phoenix Restaurant Logo">
+                            <h1>Thông Báo Đặt Bàn</h1>
+                            <p>Xin chào quý khách ${name},</p>
+                        </div>
+                        <div class="content">
+                            <p>Nhà hàng Phoenix Restaurant xin thông báo. Quý khách có lịch hẹn đặt bàn tại nhà hàng vào <strong>${timeline}</strong> ngày <strong>${dayBooking}</strong>.</p>
+                            <p>Quý khách vui lòng đến đúng thời gian lịch hẹn đặt bàn. Nếu quý khách đến muộn sau thời gian đặt bàn là <span class="highlight">10 phút</span>, <strong>bàn sẽ bị hủy</strong>.</p>
+                            <p>Phoenix Restaurant rất mong được chào đón quý khách tại nhà hàng của chúng tôi!</p>
+                        </div>
+                        <div class="footer">
+                            <p>Cảm ơn quý khách đã chọn Phoenix Restaurant. Nếu có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua email <a href="mailto:phoenixrestaurant13@gmail.com">phoenixrestaurant13@gmail.com</a>.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const mailOptions = {
+                from: "Phoenix Restaurant <phoenixrestaurant13@gmail.com>", // Người gửi
+                to: email, // Người nhận
+                subject: subject, // Tiêu đề
+                html: content // Nội dung HTML
+            };
+
+            await sendMail.transporter.sendMail(mailOptions);
+        }
+
+        return res.status(200).json({ status: true, message: "Gửi Mail thông báo thành công" });
+    } catch (err) {
+        console.error("Lỗi khi gửi email:", err);
+        return res.status(400).json({ status: false, message: "Gửi Mail thất bại" });
+    }
+});
+
 
 module.exports = router;
 

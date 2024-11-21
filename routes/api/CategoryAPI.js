@@ -17,7 +17,7 @@ router.post('/add', async function (req, res, next) {
 //localhost:3000/category/get
 router.get('/get', async function (req, res, next) {
     try {
-        const list = await categoryModel.find();
+        const list = await categoryModel.find({ isActive: true });
         res.status(200).json(list);
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai" });
@@ -27,8 +27,8 @@ router.get('/get', async function (req, res, next) {
 //localhost:3000/category/getCategoryById/
 router.get('/getCategoryById/:id', async function (req, res, next) {
     try {
-        const {id} = req.params;
-        const list = await categoryModel.findById(id);
+        const { id } = req.params;
+        const list = await categoryModel.findOne({ _id: id, isActive: true });
         res.status(200).json(list);
     } catch (error) {
         res.status(400).json({ "status": false, "message": "That Bai" });
@@ -44,6 +44,7 @@ router.post('/editById/:id', async function (req, res, next) {
         if (itemEdit) {
             itemEdit.name = name ? name : itemEdit.name;
             itemEdit.image = image ? image : itemEdit.image;
+            itemEdit.isActive = isActive ? isActive : itemEdit.isActive;
             await itemEdit.save();
             res.status(200).json({ "status": true, "message": "Thanh Cong" });
         } else {
