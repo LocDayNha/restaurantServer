@@ -65,8 +65,8 @@ router.post('/add', async function (req, res, next) {
             res.status(400).json({ status: false, result: false, message: 'Chưa cập nhật thông tin cá nhân' })
         }
     } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, result: false, message: "Thất bại" });
+        console.error("Lỗi khi gửi email:", err);
+        return res.status(400).json({ status: false, message: "Gửi Mail thất bại" });
     }
 });
 
@@ -163,7 +163,7 @@ router.get('/notification', async function (req, res, next) {
     try {
         const tomorrow = moment().add(1, 'days').format('DD/MM/YYYY');
 
-        const listEmailBooking = await bookingModel.find({ dayBooking: tomorrow }).populate([
+        const listEmailBooking = await bookingModel.find({ dayBooking: tomorrow, notification: false }).populate([
             {
                 path: 'table_id',
                 populate: {
@@ -178,16 +178,18 @@ router.get('/notification', async function (req, res, next) {
         ]);
 
         const userInfor = listEmailBooking.map(booking => ({
+            id: booking._id,
             name: booking.user_id.name,
             email: booking.user_id.email,
             dayBooking: booking.dayBooking,
             timeline: booking.table_id.timeline_id.name
         }));
-        console.log('userInfor:', userInfor);
+
+        const failedEmails = [];
 
         // Lặp qua từng người dùng để gửi email
         for (const user of userInfor) {
-            const { name, email, dayBooking, timeline } = user;
+            const { id, name, email, dayBooking, timeline } = user;
 
             const subject = 'Thông Báo Đặt Bàn - Phoenix Restaurant';
             const content = `
@@ -302,10 +304,25 @@ router.get('/notification', async function (req, res, next) {
                 html: content // Nội dung HTML
             };
 
-            await sendMail.transporter.sendMail(mailOptions);
+            try {
+                await sendMail.transporter.sendMail(mailOptions);
+
+                // Cập nhật trạng thái notification thành true
+                await bookingModel.updateOne({ _id: id }, { $set: { notification: true } });
+
+            } catch (err) {
+                console.error(`Lỗi khi gửi email cho ${email}:`, err);
+                failedEmails.push({ name, email });
+            }
         }
 
-        return res.status(200).json({ status: true, message: "Gửi Mail thông báo thành công" });
+        return res.status(200).json({
+            status: true,
+            message: failedEmails.length
+                ? `Gửi thông báo thành công cho ${userInfor.length - failedEmails.length} người. Không thể gửi cho ${failedEmails.length} người.`
+                : 'Gửi thông báo thành công cho tất cả người dùng.',
+            failedEmails
+        });
     } catch (err) {
         console.error("Lỗi khi gửi email:", err);
         return res.status(400).json({ status: false, message: "Gửi Mail thất bại" });

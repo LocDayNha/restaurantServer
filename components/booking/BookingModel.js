@@ -7,6 +7,7 @@ const booking = new Schema({
   dayBooking: { type: String },
   timeCreate: { type: String },
   dayCreate: { type: String },
+  notification: { type: Boolean, default: false },
   user_id: { type: ObjectId, ref: "user" },
   table_id: { type: ObjectId, ref: "table" },
 });

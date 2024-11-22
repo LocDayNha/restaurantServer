@@ -14,7 +14,9 @@ require("./components/booking/BookingModel");
 require("./components/timeline/TimelineModel");
 require("./components/category/CategoryModel");
 require("./components/order/OrderModel");
+require("./components/rating/RatingModel");
 require("./components/ratingfood/RatingFoodModel");
+
 
 var userRouter = require("./routes/api/UserAPI");
 var menuRouter = require("./routes/api/MenuAPI");
@@ -24,6 +26,7 @@ var timelineRouter = require("./routes/api/TimelineAPI");
 var categoryRouter = require("./routes/api/CategoryAPI");
 var orderRouter = require("./routes/api/OrderAPI");
 var paymentRouter = require("./routes/api/PaymentAPI");
+var ratingRouter = require("./routes/api/RatingAPI");
 var ratingfoodRouter = require("./routes/api/RatingFoodAPI");
 
 var indexRouter = require('./routes/index');
@@ -58,15 +61,16 @@ app.use('/timeline', timelineRouter);
 app.use('/category', categoryRouter);
 app.use('/order', orderRouter);
 app.use('/payment', paymentRouter);
+app.use('/rating', ratingRouter);
 app.use('/ratingfood', ratingfoodRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
