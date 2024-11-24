@@ -107,8 +107,6 @@ router.post('/clickLogin', async function (req, res, next) {
       console.log('Email chưa được xác thực');
     } else if (userMail.role !== 3) {
       console.log('Không có quyền Admin để truy cập');
-    } else if (userMail.password !== password) {
-      console.log('Nhập lại mật khẩu');
     } else {
       const { password, ...newUser } = userMail._doc;
       const token = JWT.sign({ newUser }, config.SECRETKEY, { expiresIn: '1h' });

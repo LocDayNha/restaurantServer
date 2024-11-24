@@ -61,7 +61,7 @@
 </aside>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <div class="container-fluid py-4">
-            <h4>Today's</h4>
+        <h4>Today's</h4>
         <div class="row">
             <div class="col-xl-2 col-sm-6 mb-xl-0 mb-4">
                 <div class="card">
@@ -71,8 +71,12 @@
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-capitalize font-weight-bold">Money</p>
                                     <h5 class="font-weight-bolder mb-0">
-                                        {{moneyDay}}
-                                        <span class="col-3 text-sm font-weight-bolder">VND</span>
+                                        <script>
+                                            const moneyDay = {{ moneyDay }};
+                                            document.write(
+                                                new Intl.NumberFormat('vi-VN').format(moneyDay) + ' <span class="col-3 text-sm font-weight-bolder">VND</span>'
+                                            );
+                                        </script>
                                     </h5>
                                 </div>
                             </div>
@@ -128,7 +132,14 @@
                                     <div class="d-flex mb-2">
                                         <p class="text-xs mt-1 mb-0 font-weight-bold">Money</p>
                                     </div>
-                                    <h4 class="font-weight-bolder">{{moneyYear}}</h4>
+                                    <h4 class="font-weight-bolder">
+                                        <script>
+                                            const moneyYear = {{ moneyYear }};
+                                            document.write(
+                                                new Intl.NumberFormat('vi-VN').format(moneyYear)
+                                            );
+                                        </script>
+                                    </h4>
                                     <div class="progress w-75">
                                         <div class="progress-bar bg-dark w-90" role="progressbar" aria-valuenow="90"
                                             aria-valuemin="0" aria-valuemax="100"></div>
