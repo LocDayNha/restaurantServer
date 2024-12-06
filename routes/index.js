@@ -164,14 +164,50 @@ router.get('/home', async function (req, res, next) {
 router.get('/data', async function (req, res, next) {
   try {
     const listMenu = await menuModel.find().populate('category');
-    const listTable = await tableModel.find().populate('timeline_id');
-    const listTimeline = await timelineModel.find();
-    const listCategory = await categoryModel.find();
-    if (!listMenu | !listTable | !listTimeline | !listCategory) {
+    if (!listMenu) {
       console.log('Lấy dữ liệu thất bại /data');
     } else {
       console.log('Lấy dữ liệu thành công /data');
-      res.render('data', { menu: listMenu, table: listTable, category: listCategory, timeline: listTimeline });
+      res.render('data', { menu: listMenu });
+    }
+  } catch (error) {
+    console.log('Lỗi hệ thống:', error);
+  }
+});
+router.get('/dataTable', async function (req, res, next) {
+  try {
+    const listTable = await tableModel.find().populate('timeline_id');
+    if (!listTable) {
+      console.log('Lấy dữ liệu thất bại /dataTable');
+    } else {
+      console.log('Lấy dữ liệu thành công /dataTable');
+      res.render('dataTable', { table: listTable });
+    }
+  } catch (error) {
+    console.log('Lỗi hệ thống:', error);
+  }
+});
+router.get('/dataCategory', async function (req, res, next) {
+  try {
+    const listCategory = await categoryModel.find();
+    if (!listCategory) {
+      console.log('Lấy dữ liệu thất bại /dataCategory');
+    } else {
+      console.log('Lấy dữ liệu thành công /dataCategory');
+      res.render('dataCategory', { category: listCategory });
+    }
+  } catch (error) {
+    console.log('Lỗi hệ thống:', error);
+  }
+});
+router.get('/dataTimeline', async function (req, res, next) {
+  try {
+    const listTimeline = await timelineModel.find();
+    if (!listTimeline) {
+      console.log('Lấy dữ liệu thất bại /dataTimeline');
+    } else {
+      console.log('Lấy dữ liệu thành công /dataTimeline');
+      res.render('dataTimeline', { timeline: listTimeline });
     }
   } catch (error) {
     console.log('Lỗi hệ thống:', error);
@@ -230,6 +266,20 @@ router.get('/booking', async function (req, res, next) {
     console.log(today);
     console.log(listBooking.dayBooking);
     res.render('booking', { booking: listBooking });
+  } catch (error) {
+    console.log('Lỗi hệ thống:', error);
+  }
+});
+router.get('/rating', async function (req, res, next) {
+  try {
+    res.render('rating');
+  } catch (error) {
+    console.log('Lỗi hệ thống:', error);
+  }
+});
+router.get('/ratingFood', async function (req, res, next) {
+  try {
+    res.render('ratingFood');
   } catch (error) {
     console.log('Lỗi hệ thống:', error);
   }
@@ -365,12 +415,13 @@ router.get('/getTimelineById/:id', async function (req, res, next) {
 router.post('/editMenuById/:id', async function (req, res, next) {
   try {
     const { id } = req.params;
-    const { name, price, category } = req.body;
+    const { name, price, category, isActive } = req.body;
     const itemEdit = await menuModel.findById(id);
     if (itemEdit) {
       itemEdit.name = name ? name : itemEdit.name;
       itemEdit.price = price ? price : itemEdit.price;
       itemEdit.category = category ? category : itemEdit.category;
+      itemEdit.isActive = isActive ? isActive : itemEdit.isActive;
       await itemEdit.save();
       console.log('Cập nhật Menu thành công /editMenuById');
       res.redirect("/data");
@@ -385,13 +436,14 @@ router.post('/editMenuById/:id', async function (req, res, next) {
 router.post('/editTableById/:id', async function (req, res, next) {
   try {
     const { id } = req.params;
-    const { timeline_id } = req.body;
+    const { timeline_id, isActive } = req.body;
     const itemEdit = await tableModel.findById(id);
     if (itemEdit) {
       itemEdit.timeline_id = timeline_id ? timeline_id : itemEdit.timeline_id;
+      itemEdit.isActive = isActive ? isActive : itemEdit.isActive;
       await itemEdit.save();
       console.log('Cập nhật Bàn thành công /editTableById');
-      res.redirect("/data");
+      res.redirect("/dataTable");
     } else {
       console.log('Cập nhật Bàn thất bại /editTableById');
     }
@@ -403,13 +455,14 @@ router.post('/editTableById/:id', async function (req, res, next) {
 router.post('/editCategoryById/:id', async function (req, res, next) {
   try {
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, isActive } = req.body;
     const itemEdit = await categoryModel.findById(id);
     if (itemEdit) {
       itemEdit.name = name ? name : itemEdit.name;
+      itemEdit.isActive = isActive ? isActive : itemEdit.isActive;
       await itemEdit.save();
       console.log('Cập nhật loại món ăn thành công /editCategoryId');
-      res.redirect("/data");
+      res.redirect("/dataCategory");
     } else {
       console.log('Cập nhật loại món ăn thất bại /editCategoryId');
     }
@@ -421,13 +474,14 @@ router.post('/editCategoryById/:id', async function (req, res, next) {
 router.post('/editTimelineById/:id', async function (req, res, next) {
   try {
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, isActive } = req.body;
     const itemEdit = await timelineModel.findById(id);
     if (itemEdit) {
       itemEdit.name = name ? name : itemEdit.name;
+      itemEdit.isActive = isActive ? isActive : itemEdit.isActive;
       await itemEdit.save();
       console.log('Cập nhật thời gian thành công /editTimelineId');
-      res.redirect("/data");
+      res.redirect("/dataTimeline");
     } else {
       console.log('Cập nhật thời gian thất bại /editTimelineId');
     }

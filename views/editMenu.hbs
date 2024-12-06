@@ -4,13 +4,28 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link  active" href="/home">
+                <a class="nav-link  " href="/home">
                     <span class="nav-link-text ms-1">Home</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link  " href="/data">
-                    <span class="nav-link-text ms-1">Data</span>
+                    <span class="nav-link-text ms-1">Data Dishes</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link  " href="/dataTable">
+                    <span class="nav-link-text ms-1">Data Table</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link  " href="/dataCategory">
+                    <span class="nav-link-text ms-1">Data Category</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link  " href="/dataTimeline">
+                    <span class="nav-link-text ms-1">Data Timeline</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -39,8 +54,13 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="/review">
-                    <span class="nav-link-text ms-1">Reviewer</span>
+                <a class="nav-link  " href="/raying">
+                    <span class="nav-link-text ms-1">Rating</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link  " href="/ratingFood">
+                    <span class="nav-link-text ms-1">Rating Food</span>
                 </a>
             </li>
             <li class="nav-item mt-3">
@@ -74,11 +94,13 @@
                                     <form accept-charset="utf-8" action="/editMenuById/{{_id}}" method="post">
                                         <div class="mb-3">
                                             <label for="email" class="form-label">Name</label>
-                                            <input type="text" name="name" placeholder="" class="form-control" value="{{itemMenu.name}}">
+                                            <input type="text" name="name" placeholder="" class="form-control"
+                                                value="{{itemMenu.name}}">
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Price</label>
-                                            <input type="text" name="price" placeholder="" class="form-control" value="{{itemMenu.price}}">
+                                            <input type="text" name="price" placeholder="" class="form-control"
+                                                value="{{itemMenu.price}}">
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Category</label>
@@ -87,6 +109,16 @@
                                                 {{#each category}}
                                                 <option value="{{_id}}">{{name}}</option>
                                                 {{/each}}
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Active</label>
+                                            <select class="form-select" aria-label="Default select example"
+                                                name="isActive">
+                                                <option value="true" {{#if itemMenu.isActive}}selected{{/if}}>True
+                                                </option>
+                                                <option value="false" {{#unless itemMenu.isActive}}selected{{/unless}}>
+                                                    False</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">

@@ -9,7 +9,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active " href="/data">
+                <a class="nav-link  " href="/data">
                     <span class="nav-link-text ms-1">Data Dishes</span>
                 </a>
             </li>
@@ -24,7 +24,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="/dataTimeline">
+                <a class="nav-link active " href="/dataTimeline">
                     <span class="nav-link-text ms-1">Data Timeline</span>
                 </a>
             </li>
@@ -85,7 +85,7 @@
             <div class="col-12">
                 <div class="card mb-4">
                     <div class="card-header pb-0">
-                        <h6>Dish</h6>
+                        <h6>Timeline</h6>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-0">
@@ -93,14 +93,8 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center text-secondary opacity-7">
-                                            Image</th>
-                                        <th class="text-center text-secondary opacity-7">
                                             Name</th>
                                         <th class="text-center text-secondary opacity-7">
-                                            Price</th>
-                                        <th class="text-center text-secondary opacity-7">
-                                            Category</th>
-                                        <th class="text-center text-center text-secondary opacity-7">
                                             Create</th>
                                         <th class="text-center text-secondary opacity-7">
                                             Active</th>
@@ -109,27 +103,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{#each menu}}
+                                    {{#each timeline}}
                                     <tr>
-                                        <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div>
-                                                    <img src="{{image}}" class="rounded " alt="user1"
-                                                        style="width: 100px; height: 100px;">
-                                                </div>
-                                            </div>
-                                        </td>
                                         <td>
                                             <p class="text-center text-xs font-weight-bold mb-0">{{name}}</p>
                                         </td>
-                                        <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">{{price}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">{{category.name}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">null</p>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">null</span>
                                         </td>
                                         <td class="align-middle text-center text-sm">
                                             {{#if isActive}}
@@ -139,14 +119,14 @@
                                             {{/if}}
                                         </td>
                                         <td class="align-middle">
-                                            <a href="/getMenuById/{{_id}}"
+                                            <a href="/getTimelineById/{{_id}}"
                                                 class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="#" class="text-center text-secondary font-weight-bold text-xs"
+                                            <a href="" class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Delete
                                             </a>

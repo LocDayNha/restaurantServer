@@ -9,12 +9,12 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active " href="/data">
+                <a class="nav-link  " href="/data">
                     <span class="nav-link-text ms-1">Data Dishes</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="/dataTable">
+                <a class="nav-link active " href="/dataTable">
                     <span class="nav-link-text ms-1">Data Table</span>
                 </a>
             </li>
@@ -85,7 +85,7 @@
             <div class="col-12">
                 <div class="card mb-4">
                     <div class="card-header pb-0">
-                        <h6>Dish</h6>
+                        <h6>Table</h6>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-0">
@@ -93,13 +93,11 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center text-secondary opacity-7">
-                                            Image</th>
+                                            Number</th>
                                         <th class="text-center text-secondary opacity-7">
-                                            Name</th>
+                                            Seat</th>
                                         <th class="text-center text-secondary opacity-7">
-                                            Price</th>
-                                        <th class="text-center text-secondary opacity-7">
-                                            Category</th>
+                                            Timeline</th>
                                         <th class="text-center text-center text-secondary opacity-7">
                                             Create</th>
                                         <th class="text-center text-secondary opacity-7">
@@ -109,24 +107,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{#each menu}}
+                                    {{#each table}}
                                     <tr>
                                         <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div>
-                                                    <img src="{{image}}" class="rounded " alt="user1"
-                                                        style="width: 100px; height: 100px;">
-                                                </div>
-                                            </div>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{number}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">{{name}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{userNumber}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">{{price}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">{{category.name}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{timeline_id.name}}
+                                            </p>
                                         </td>
                                         <td>
                                             <p class="text-center text-xs font-weight-bold mb-0">null</p>
@@ -139,14 +130,15 @@
                                             {{/if}}
                                         </td>
                                         <td class="align-middle">
-                                            <a href="/getMenuById/{{_id}}"
+                                            <a href="/getTableById/{{_id}}"
                                                 class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Edit
                                             </a>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="#" class="text-center text-secondary font-weight-bold text-xs"
+                                            <a href="javascript:;"
+                                                class="text-center text-secondary font-weight-bold text-xs"
                                                 data-toggle="tooltip" data-original-title="Edit user">
                                                 Delete
                                             </a>
