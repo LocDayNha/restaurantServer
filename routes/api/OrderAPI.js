@@ -15,6 +15,7 @@ router.post('/addNew', async function (req, res, next) {
         const currentDate = new Date();
         let timeNow = currentDate.toLocaleTimeString('vi-VN');
         let dayNow = currentDate.toLocaleDateString('vi-VN');
+        
 
         dishes.forEach(dish => {  // forEach là một vòng lặp qua từng món ăn trong mảng dishes
             const menuItem = menuItems.find(item => item._id.toString() === dish._id);
@@ -25,6 +26,13 @@ router.post('/addNew', async function (req, res, next) {
         });
 
         const order = { tableNumber, nameUser, dishes, quantity: totalQuantity, totalMoney, timeOrder: timeNow, dayOrder: dayNow };
+
+        //định dang lại ngày đặt hàng
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const year = currentDate.getFullYear();
+        const today = `${day}/${month}/${year}`;
+        order.dayOrder = today;
 
         await orderModel.create(order);
 
