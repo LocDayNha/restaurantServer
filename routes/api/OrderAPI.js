@@ -6,7 +6,7 @@ var menuModel = require("../../components/menu/MenuModel");
 //localhost:3000/order/addNew
 router.post('/addNew', async function (req, res, next) {
     try {
-        const { tableNumber, nameUser, dishes } = req.body;
+        const { numberTable, dishes } = req.body;
         const menuIds = dishes.map(dish => dish._id); //tạo ra một mảng mới, chỉ chứa giá trị menuId của mỗi món ăn
         const menuItems = await menuModel.find({ _id: { $in: menuIds } }); //mảng menuItems chứa các đối tượng món ăn từ cơ sở dữ liệu
 
@@ -15,7 +15,7 @@ router.post('/addNew', async function (req, res, next) {
         const currentDate = new Date();
         let timeNow = currentDate.toLocaleTimeString('vi-VN');
         let dayNow = currentDate.toLocaleDateString('vi-VN');
-        
+
 
         dishes.forEach(dish => {  // forEach là một vòng lặp qua từng món ăn trong mảng dishes
             const menuItem = menuItems.find(item => item._id.toString() === dish._id);
@@ -25,7 +25,7 @@ router.post('/addNew', async function (req, res, next) {
             }
         });
 
-        const order = { tableNumber, nameUser, dishes, quantity: totalQuantity, totalMoney, timeOrder: timeNow, dayOrder: dayNow };
+        const order = { numberTable, dishes, quantity: totalQuantity, totalMoney, timeOrder: timeNow, dayOrder: dayNow };
 
         //định dang lại ngày đặt hàng
         const day = String(currentDate.getDate()).padStart(2, '0');
@@ -273,25 +273,33 @@ router.get('/getById/:id', async function (req, res, next) {
 });
 
 //localhost:3000/order/edit
-router.post('/edit/:id', async function (req, res, next) {
+router.post('/edit', async function (req, res, next) {
     try {
-        const { id } = req.params;
-        const { isPayment } = req.body;
+        const { id } = req.body;
+        const { dishes } = req.body;
 
-        const list = await orderModel.findById(id);
+        const order = await orderModel.findById(id);
 
-        if (list) {
-            if (isPayment !== undefined) {
-                list.isPayment = isPayment;
-            }
-            await list.save();
-            res.status(200).json({ "status": true, "message": "Thanh Cong" });
-        } else {
-            res.status(400).json({ "status": false, "message": "That Bai" });
-        }
+        if (!order) {
+            return res.status(400).json({ "status": false, "message": "Không có dữ liệu Order" });
+        };
 
+        let totalMoney = order.totalMoney;
+        let totalQuantity = order.quantity;
+
+        dishes.forEach(dish => {
+            totalMoney += parseInt(dish.price) * dish.quantity;
+            totalQuantity += dish.quantity;
+        });
+
+        order.dishes = [...order.dishes, ...dishes];
+        order.quantity = totalQuantity;
+        order.totalMoney = totalMoney;
+
+        await order.save();
+        return res.status(200).json({ "status": true, "message": "Thanh Cong" });
     } catch (error) {
-        res.status(400).json({ "status": false, "message": "That Bai" });
+        res.status(500).json({ "status": false, "message": "That Bai" });
     }
 });
 

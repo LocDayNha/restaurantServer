@@ -4,8 +4,7 @@ const ObjectId = Schema.ObjectId;
 
 const order = new Schema({
     id: { type: ObjectId },
-    tableNumber: { type: String },
-    nameUser: { type: String },
+    numberTable: { type: Number },
     dishes: { type: Array },
     quantity: { type: Number },
     totalMoney: { type: Number },

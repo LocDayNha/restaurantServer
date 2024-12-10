@@ -1,16 +1,18 @@
 var express = require('express');
 var router = express.Router();
 var tableModel = require("../../components/table/TableModel");
+var bookingModel = require("../../components/booking/BookingModel");
+var userModel = require("../../components/user/UserModel");
 var upload = require("../utils/upload");
 var timelineModel = require("../../components/timeline/TimelineModel");
 
 //localhost:3000/table/add
 router.post('/add', async function (req, res, next) {
     try {
-        const { number, userNumber, timeline_id } = req.body;
+        const { number, timeline_id } = req.body;
         const currentDate = new Date();
         let dayNow = currentDate.toLocaleDateString('vi-VN');
-        const addNew = { number, userNumber, timeline_id, createAt: dayNow };
+        const addNew = { number, timeline_id, createAt: dayNow };
 
         await tableModel.create(addNew);
         res.status(200).json({ "status": true, "message": "Thanh Cong" });
@@ -22,11 +24,33 @@ router.post('/add', async function (req, res, next) {
 //localhost:3000/table/getByNumber
 router.post('/getByNumber', async function (req, res, next) {
     try {
-        const { number } = req.body;
+        const { number, dayBooking } = req.body;
+
         const list = await tableModel.find({ number: number, isActive: true }).populate('timeline_id');
-        res.status(200).json(list);
+
+        const listBooking = await bookingModel.find({ dayBooking: dayBooking }).populate({
+            path: 'user_id',
+            select: 'email name phoneNumber'
+        })
+            .populate({
+                path: 'table_id',
+                match: { number: number },
+                populate: {
+                    path: 'timeline_id',
+                    select: 'name'
+                }
+            });
+
+        // console.log('aaaa', listBooking);
+
+        const listTableId = new Set(listBooking.filter(booking => booking.table_id !== null).map(booking => booking.table_id._id.toString()));
+
+        const listFinal = list.filter(table => !listTableId.has(table._id.toString()));
+
+        res.status(200).json({ status: true, message: "Thành công", listFinal });
     } catch (error) {
-        res.status(400).json({ "status": false, "message": "That Bai" });
+        console.log(error);
+        res.status(400).json({ "status": false, "message": "That Bai", error });
     }
 });
 

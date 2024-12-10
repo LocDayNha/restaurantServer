@@ -4,8 +4,7 @@ const ObjectId = Schema.ObjectId;
 
 const table = new Schema({
   id: { type: ObjectId },
-  number: { type: Number },
-  userNumber: { type: String },
+  number: { type: Number, default: '' },
   timeline_id: { type: ObjectId, ref: "timeline" },
   isActive: { type: Boolean, default: true },
   createAt: { type: String },

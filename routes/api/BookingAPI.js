@@ -9,7 +9,7 @@ var sendMail = require("../utils/mail");
 //localhost:3000/booking/add
 router.post('/add', async function (req, res, next) {
     try {
-        const { user_id, table_id, dayBooking } = req.body;
+        const { user_id, table_id, dayBooking, seat } = req.body;
         const currentDate = new Date();
         let timeNow = currentDate.toLocaleTimeString('vi-VN');
         let dayNow = currentDate.toLocaleDateString('vi-VN');
@@ -27,7 +27,7 @@ router.post('/add', async function (req, res, next) {
             }
         });
 
-        const addNew = { user_id, table_id, dayBooking, timeCreate: timeNow, dayCreate: dayNow };
+        const addNew = { user_id, table_id, dayBooking, seat, timeCreate: timeNow, dayCreate: dayNow };
         let check = false;
         if (user.name && user.phoneNumber) {
             if (listBooking.length > 0) {
