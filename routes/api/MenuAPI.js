@@ -171,17 +171,36 @@ router.delete("/deleteById/:id", async function (req, res, next) {
   }
 });
 
-//viết api tìm kiếm theo tên món ăn
-//localhost:3000/menu/search
+//localhost:3000/menu/search?name=Hamburger&minPrice=10000&maxPrice=20000
 router.get("/search", async function (req, res, next) {
   try {
-    const { name } = req.query;
-    const list = await menuModel.find({
-      name: { $regex: name, $options: "i" },
-    });
-    res.status(200).json(list);
+    const { name, minPrice, maxPrice } = req.query;
+    if (name && minPrice && maxPrice) {
+      const list = await menuModel.find({
+        name: { $regex: name, $options: "i" },
+      });
+      const filteredList = list.filter((item) => {
+        const price = Number(item.price);
+        return price >= minPrice && price <= maxPrice;
+      });
+      res.status(200).json(filteredList);
+    } else if (name) {
+      const list = await menuModel.find({
+        name: { $regex: name, $options: "i" },
+      });
+      res.status(200).json(list);
+    } else if (minPrice && maxPrice) {
+      const list = await menuModel.find();
+      const filteredList = list.filter((item) => {
+        const price = Number(item.price);
+        return price >= minPrice && price <= maxPrice;
+      });
+      res.status(200).json(filteredList);
+    } else {
+      res.status(400).json({ status: false, message: "Đã có lỗi xảy ra" });
+    }
   } catch (error) {
-    res.status(400).json({ status: false, message: "That Bai" });
+    res.status(500).json({ status: false, message: "That Bai" });
   }
 });
 
