@@ -171,17 +171,27 @@ router.delete("/deleteById/:id", async function (req, res, next) {
   }
 });
 
-//localhost:3000/menu/search?name=Hamburger&minPrice=10000&maxPrice=20000
-router.get("/search", async function (req, res, next) {
+//localhost:3000/menu/search
+/**
+ * body: {
+ * name: "Hamburger",
+ * minPrice: 10000,
+ * maxPrice: 20000
+ * }
+ */
+router.post("/search", async function (req, res, next) {
   try {
-    const { name, minPrice, maxPrice } = req.query;
+    const { name, minPrice, maxPrice } = req.body; // Sử dụng req.body cho yêu cầu POST
+    const min = Number(minPrice);
+    const max = Number(maxPrice);
+
     if (name && minPrice && maxPrice) {
       const list = await menuModel.find({
         name: { $regex: name, $options: "i" },
       });
       const filteredList = list.filter((item) => {
         const price = Number(item.price);
-        return price >= minPrice && price <= maxPrice;
+        return price >= min && price <= max;
       });
       res.status(200).json(filteredList);
     } else if (name) {
@@ -193,14 +203,14 @@ router.get("/search", async function (req, res, next) {
       const list = await menuModel.find();
       const filteredList = list.filter((item) => {
         const price = Number(item.price);
-        return price >= minPrice && price <= maxPrice;
+        return price >= min && price <= max;
       });
       res.status(200).json(filteredList);
     } else {
-      res.status(400).json({ status: false, message: "Đã có lỗi xảy ra" });
+      res.status(400).json({ status: false, message: "Tham số không hợp lệ" });
     }
   } catch (error) {
-    res.status(500).json({ status: false, message: "That Bai" });
+    res.status(500).json({ status: false, message: "Lỗi máy chủ nội bộ" });
   }
 });
 
