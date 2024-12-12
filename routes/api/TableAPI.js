@@ -9,10 +9,10 @@ var timelineModel = require("../../components/timeline/TimelineModel");
 //localhost:3000/table/add
 router.post('/add', async function (req, res, next) {
     try {
-        const { number, timeline_id } = req.body;
+        const { timeline_id } = req.body;
         const currentDate = new Date();
         let dayNow = currentDate.toLocaleDateString('vi-VN');
-        const addNew = { number, timeline_id, createAt: dayNow };
+        const addNew = { timeline_id, createAt: dayNow };
 
         await tableModel.create(addNew);
         res.status(200).json({ "status": true, "message": "Thanh Cong" });
@@ -24,9 +24,10 @@ router.post('/add', async function (req, res, next) {
 //localhost:3000/table/getByNumber
 router.post('/getByNumber', async function (req, res, next) {
     try {
-        const { number, dayBooking } = req.body;
 
-        const list = await tableModel.find({ number: number, isActive: true }).populate('timeline_id');
+        const { dayBooking } = req.body;
+
+        const list = await tableModel.find({ isActive: true }).populate('timeline_id');
 
         const listBooking = await bookingModel.find({ dayBooking: dayBooking }).populate({
             path: 'user_id',
@@ -34,14 +35,11 @@ router.post('/getByNumber', async function (req, res, next) {
         })
             .populate({
                 path: 'table_id',
-                match: { number: number },
                 populate: {
                     path: 'timeline_id',
                     select: 'name'
                 }
             });
-
-        // console.log('aaaa', listBooking);
 
         const listTableId = new Set(listBooking.filter(booking => booking.table_id !== null).map(booking => booking.table_id._id.toString()));
 
