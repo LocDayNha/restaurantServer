@@ -284,22 +284,42 @@ router.post('/edit', async function (req, res, next) {
             return res.status(400).json({ "status": false, "message": "Không có dữ liệu Order" });
         };
 
-        let totalMoney = order.totalMoney;
-        let totalQuantity = order.quantity;
+        // Tạo map để kiểm tra món ăn hiện tại
+        const dishMap = new Map(order.dishes.map(dish => [dish._id.toString(), { ...dish }]));
 
-        dishes.forEach(dish => {
-            totalMoney += parseInt(dish.price) * dish.quantity;
-            totalQuantity += dish.quantity;
+        dishes.forEach(newDish => {
+            const price = parseInt(newDish.price, 10);
+            const quantity = parseInt(newDish.quantity, 10);
+
+            if (dishMap.has(newDish._id)) {
+                // Nếu món ăn đã tồn tại
+                const existingDish = dishMap.get(newDish._id);
+                existingDish.quantity += quantity;
+                dishMap.set(newDish._id, existingDish);
+            } else {
+                // Nếu món ăn chưa tồn tại
+                dishMap.set(newDish._id, { ...newDish, quantity });
+            }
         });
 
-        order.dishes = [...order.dishes, ...dishes];
-        order.quantity = totalQuantity;
+        order.dishes = Array.from(dishMap.values());
+
+        let totalMoney = 0;
+        let totalQuantity = 0;
+
+        order.dishes.forEach(dish => {
+            totalMoney += parseInt(dish.price, 10) * parseInt(dish.quantity, 10);
+            totalQuantity += parseInt(dish.quantity, 10);
+        });
+
         order.totalMoney = totalMoney;
+        order.quantity = totalQuantity;
 
         await order.save();
-        return res.status(200).json({ "status": true, "message": "Thanh Cong" });
+        return res.status(200).json({ status: true, message: "Cập nhật đơn hàng thành công", order });
     } catch (error) {
-        res.status(500).json({ "status": false, "message": "That Bai" });
+        console.error("Error in /order/edit:", error.message);
+        res.status(500).json({ status: false, message: "Có lỗi xảy ra", error: error.message });
     }
 });
 
