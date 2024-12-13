@@ -179,24 +179,20 @@ router.post("/loginGoogle", async function (req, res, next) {
       const userMail = await userModel.findOne({ email: email });
 
       if (userMail) {
-        return res
-          .status(200)
-          .json({
-            status: true,
-            message: "Đăng nhập Google thành công",
-            userMail,
-          });
+        return res.status(200).json({
+          status: true,
+          message: "Đăng nhập Google thành công",
+          userMail,
+        });
       } else {
         const newUser = { email, name, image };
         const userMail = new userModel(newUser);
         await userMail.save();
-        return res
-          .status(200)
-          .json({
-            status: true,
-            message: "Đăng nhập Google thành công",
-            userMail,
-          });
+        return res.status(200).json({
+          status: true,
+          message: "Đăng nhập Google thành công",
+          userMail,
+        });
       }
     }
   } catch (error) {
@@ -219,24 +215,20 @@ router.post("/loginFacebook", async function (req, res, next) {
       const userMail = await userModel.findOne({ email: email });
 
       if (userMail) {
-        return res
-          .status(200)
-          .json({
-            status: true,
-            message: "Đăng nhập Facebook thành công",
-            userMail,
-          });
+        return res.status(200).json({
+          status: true,
+          message: "Đăng nhập Facebook thành công",
+          userMail,
+        });
       } else {
         const newUser = { email, name, image };
         const userMail = new userModel(newUser);
         await userMail.save();
-        return res
-          .status(200)
-          .json({
-            status: true,
-            message: "Đăng nhập Facebook thành công",
-            userMail,
-          });
+        return res.status(200).json({
+          status: true,
+          message: "Đăng nhập Facebook thành công",
+          userMail,
+        });
       }
     }
   } catch (error) {
@@ -371,13 +363,11 @@ router.post(
         update.gender = gender ? gender : update.gender;
         update.image = image ? image : update.image;
         await update.save();
-        return res
-          .status(200)
-          .json({
-            status: true,
-            message: "Cap Nhat Profile Thanh Cong",
-            update,
-          });
+        return res.status(200).json({
+          status: true,
+          message: "Cap Nhat Profile Thanh Cong",
+          update: update,
+        });
       } else {
         return res
           .status(400)
