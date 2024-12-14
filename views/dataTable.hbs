@@ -93,10 +93,6 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center text-secondary opacity-7">
-                                            Number</th>
-                                        <th class="text-center text-secondary opacity-7">
-                                            Seat</th>
-                                        <th class="text-center text-secondary opacity-7">
                                             Timeline</th>
                                         <th class="text-center text-center text-secondary opacity-7">
                                             Create</th>
@@ -110,17 +106,11 @@
                                     {{#each table}}
                                     <tr>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">{{number}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">{{userNumber}}</p>
-                                        </td>
-                                        <td>
                                             <p class="text-center text-xs font-weight-bold mb-0">{{timeline_id.name}}
                                             </p>
                                         </td>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">null</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0">{{createAt}}</p>
                                         </td>
                                         <td class="align-middle text-center text-sm">
                                             {{#if isActive}}

@@ -15,6 +15,11 @@ var timelineModel = require("../components/timeline/TimelineModel");
 var categoryModel = require("../components/category/CategoryModel");
 var orderModel = require("../components/order/OrderModel");
 
+var upload = require("./utils/upload");
+const { bucket } = require("./utils/firebase");
+const upload_firebase = require("./utils/multerConfig");
+const { v4: uuidv4 } = require("uuid"); // Để tạo tên tệp duy nhất
+
 const { validationRegister } = require('../routes/validation/register');
 const { validationLogin } = require('../routes/validation/login');
 const { validationProfile } = require('../routes/validation/profile');
@@ -311,28 +316,68 @@ router.post('/addTable', async function (req, res, next) {
     } else {
       await tableModel.create(addNew);
       console.log('Thêm bàn thành công /addTable');
-      res.redirect("/data");
+      res.redirect("/dataTable");
     }
   } catch (error) {
     console.log('Lỗi hệ thống:', error);
   }
 
 });
-router.post('/addCategory', async function (req, res, next) {
+router.post('/addCategory', [upload_firebase.single("image")], async (req, res, next) => {
   try {
-    const { name, image } = req.body;
-    const addNew = { name, image };
-    if (!name) {
-      console.log('Thêm loại món ăn thất bại /addCategory');
-    } else {
-      await categoryModel.create(addNew);
-      console.log('Thêm loại món ăn thành công /addCategory');
-      res.redirect("/data");
-    }
-  } catch (error) {
-    console.log('Lỗi hệ thống:', error);
-  }
+    const { name } = req.body;
 
+    if (!req.file) {
+      console.log('Không có tập tin nào được tải lên');
+    }
+
+    const allowedMimeTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (!allowedMimeTypes.includes(req.file.mimetype)) {
+      console.log('Loại file không được hỗ trợ !');
+    }
+
+    // Tạo tên file duy nhất
+    const fileName = `${uuidv4()}.${req.file.mimetype.split("/")[1]}`;
+    const file = bucket.file(fileName);
+
+    // Upload tệp lên Firebase Storage
+    const stream = file.createWriteStream({
+      metadata: {
+        contentType: req.file.mimetype,
+      },
+    });
+
+    stream.on("error", (error) => {
+      console.log(error);
+      console.log('Không tải được hình ảnh lên');
+    });
+
+    stream.on("finish", async () => {
+      try {
+        //truy cập hình ảnh công khai
+        await file.makePublic();
+        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${file.name}`;
+        console.log(publicUrl);
+        if (!name || !publicUrl) {
+          console.log('Nhập đầy đủ thông tin !');
+        } else {
+          const addNew = { name, image: publicUrl };
+          await categoryModel.create(addNew);
+          console.log('Thêm loại món ăn thành công /addCategory');
+          res.redirect("/dataCategory");
+        }
+      } catch (error) {
+        console.error("Make public error:", error);
+        console.log("Nhập đầy đủ thông tin !");
+        // return res.status(500).send("Không thể công khai file.");
+      }
+    });
+    stream.end(req.file.buffer);
+  } catch (error) {
+    // res.send("<script>alert('Nhập đầy đủ thông tin!'); window.location.href = '/addDishes';</script>");
+    console.log("Upload image error: ", error);
+    console.log("Upload image error: ", { error: error.message });
+  }
 });
 router.post('/addTimeline', async function (req, res, next) {
   try {
@@ -343,13 +388,69 @@ router.post('/addTimeline', async function (req, res, next) {
     } else {
       await timelineModel.create(addNew);
       console.log('Thêm thời gian thành công /addTimeline');
-      res.redirect("/data");
+      res.redirect("/dataTimeline");
     }
   } catch (error) {
     console.log('Lỗi hệ thống:', error);
   }
 
 });
+router.post('/addMenuFinal', [upload_firebase.single("image")], async (req, res, next) => {
+  try {
+    const { name, price, category } = req.body;
+
+    if (!req.file) {
+      console.log('Không có tập tin nào được tải lên');
+    }
+
+    const allowedMimeTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (!allowedMimeTypes.includes(req.file.mimetype)) {
+      console.log('Loại file không được hỗ trợ !');
+    }
+
+    // Tạo tên file duy nhất
+    const fileName = `${uuidv4()}.${req.file.mimetype.split("/")[1]}`;
+    const file = bucket.file(fileName);
+
+    // Upload tệp lên Firebase Storage
+    const stream = file.createWriteStream({
+      metadata: {
+        contentType: req.file.mimetype,
+      },
+    });
+
+    stream.on("error", (error) => {
+      console.log(error);
+      console.log('Không tải được hình ảnh lên');
+    });
+
+    stream.on("finish", async () => {
+      try {
+        //truy cập hình ảnh công khai
+        await file.makePublic();
+        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${file.name}`;
+        console.log(publicUrl);
+        if (!name || !price || !category || !publicUrl) {
+          console.log('Nhập đầy đủ thông tin !');
+        } else {
+          const addNew = { name, price, image: publicUrl, category };
+          await menuModel.create(addNew);
+          return res.redirect("/data");
+        }
+      } catch (error) {
+        console.error("Make public error:", error);
+        console.log("Nhập đầy đủ thông tin !");
+        // return res.status(500).send("Không thể công khai file.");
+      }
+    });
+    stream.end(req.file.buffer);
+  } catch (error) {
+    // res.send("<script>alert('Nhập đầy đủ thông tin!'); window.location.href = '/addDishes';</script>");
+    console.log("Upload image error: ", error);
+    console.log("Upload image error: ", { error: error.message });
+  }
+}
+);
 
 /* Get */
 router.get('/getMenuById/:id', async function (req, res, next) {
