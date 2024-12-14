@@ -147,6 +147,32 @@ router.get('/getByNumber', async function (req, res, next) {
     }
 });
 
+//localhost:3000/booking/editById
+router.post('/editById/:id', async function (req, res, next) {
+    try {
+        const { id } = req.params;
+        const { numberConfirm } = req.body;
+        const booking = await bookingModel.findById(id);
+
+        if (!booking) {
+            return res.status(404).json({ "status": false, "message": "Không tìm thấy booking" });
+        }
+
+        if (numberConfirm === 2) {
+            booking.confirm = 2;
+        } else if (numberConfirm === 3) {
+            booking.confirm = 3;
+        } else {
+            return res.status(400).json({ "status": false, "message": "Giá trị confirm không hợp lệ" });
+        }
+
+        await booking.save();
+        res.status(200).json({ "status": true, "message": "Cập nhật trạng thái thành công", booking });
+    } catch (error) {
+        res.status(400).json({ "status": false, "message": "That Bai" });
+    }
+});
+
 //localhost:3000/booking/deleteById
 router.delete('/deleteById/:id', async function (req, res, next) {
     try {
