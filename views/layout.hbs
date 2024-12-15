@@ -2,67 +2,67 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Phoenix Restaurant </title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Phoenix Restaurant </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
 
-  <!--     Fonts and icons     -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-  <!-- Nucleo Icons -->
-  <link href="/stylesheets/nucleo-icons.css" rel="stylesheet" />
-  <link href="/stylesheets/nucleo-svg.css" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <!-- CSS Files -->
-  <link id="pagestyle" href="/stylesheets/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
-  <!-- Nepcha Analytics (nepcha.com) -->
-  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
-  <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <!-- Nucleo Icons -->
+    <link href="/stylesheets/nucleo-icons.css" rel="stylesheet" />
+    <link href="/stylesheets/nucleo-svg.css" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <!-- CSS Files -->
+    <link id="pagestyle" href="/stylesheets/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
+    <!-- Nepcha Analytics (nepcha.com) -->
+    <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+    <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
 
 
 </head>
 
 <body>
-  {{{body}}}
+    {{{body}}}
 
-  <!--   Core JS Files   -->
-  <script src="/javascripts/popper.min.js"></script>
-  <script src="/javascripts/bootstrap.min.js"></script>
-  <script src="/javascripts/perfect-scrollbar.min.js"></script>
-  <script src="/javascripts/smooth-scrollbar.min.js"></script>
-  <script src="/javascripts/chartjs.min.js"></script>
-  <script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-    }
-  </script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="/javascripts/soft-ui-dashboard.min.js?v=1.0.7"></script>
-  <script>
-    var ctx = document.getElementById("chart-bars").getContext("2d");
-    new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-            datasets: [{
-                label: "Money",
-                tension: 0.4,
-                borderWidth: 0,
-                borderRadius: 4,
-                borderSkipped: false,
-                backgroundColor: "#fff",
-                data: {{moneyData}},
-                maxBarThickness: 6
-            },],
+    <!--   Core JS Files   -->
+    <script src="/javascripts/popper.min.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+    <script src="/javascripts/perfect-scrollbar.min.js"></script>
+    <script src="/javascripts/smooth-scrollbar.min.js"></script>
+    <script src="/javascripts/chartjs.min.js"></script>
+    <script>
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+    </script>
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="/javascripts/soft-ui-dashboard.min.js?v=1.0.7"></script>
+    <script>
+        var ctx = document.getElementById("chart-bars").getContext("2d");
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+                datasets: [{
+                    label: "Money",
+                    tension: 0.4,
+                    borderWidth: 0,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    backgroundColor: "#fff",
+                    data: {{ moneyData }},
+            maxBarThickness: 6
+        },],
         },
-        options: {
+            options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
@@ -111,34 +111,34 @@
         },
     });
 
-    var ctx2 = document.getElementById("chart-line").getContext("2d");
+        var ctx2 = document.getElementById("chart-line").getContext("2d");
 
-    var gradientStroke1 = ctx2.createLinearGradient(0, 230, 0, 50);
-    gradientStroke1.addColorStop(1, 'rgba(203,12,159,0.2)');
-    gradientStroke1.addColorStop(0.2, 'rgba(72,72,176,0.0)');
-    gradientStroke1.addColorStop(0, 'rgba(203,12,159,0)'); //purple colors
+        var gradientStroke1 = ctx2.createLinearGradient(0, 230, 0, 50);
+        gradientStroke1.addColorStop(1, 'rgba(203,12,159,0.2)');
+        gradientStroke1.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+        gradientStroke1.addColorStop(0, 'rgba(203,12,159,0)'); //purple colors
 
-    var gradientStroke2 = ctx2.createLinearGradient(0, 230, 0, 50);
-    gradientStroke2.addColorStop(1, 'rgba(20,23,39,0.2)');
-    gradientStroke2.addColorStop(0.2, 'rgba(72,72,176,0.0)');
-    gradientStroke2.addColorStop(0, 'rgba(20,23,39,0)'); //purple colors
+        var gradientStroke2 = ctx2.createLinearGradient(0, 230, 0, 50);
+        gradientStroke2.addColorStop(1, 'rgba(20,23,39,0.2)');
+        gradientStroke2.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+        gradientStroke2.addColorStop(0, 'rgba(20,23,39,0)'); //purple colors
 
-    new Chart(ctx2, {
-        type: "line",
-        data: {
-            labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-            datasets: [{
-                label: "Dishes",
-                tension: 0.4,
-                borderWidth: 0,
-                pointRadius: 0,
-                borderColor: "#cb0c9f",
-                borderWidth: 3,
-                backgroundColor: gradientStroke1,
-                fill: true,
-                data: {{quantityData}},
-                maxBarThickness: 6
-            },
+        new Chart(ctx2, {
+            type: "line",
+            data: {
+                labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+                datasets: [{
+                    label: "Dishes",
+                    tension: 0.4,
+                    borderWidth: 0,
+                    pointRadius: 0,
+                    borderColor: "#cb0c9f",
+                    borderWidth: 3,
+                    backgroundColor: gradientStroke1,
+                    fill: true,
+                    data: {{ quantityData }},
+            maxBarThickness: 6
+        },
             {
                 label: "Order",
                 tension: 0.4,
@@ -148,11 +148,11 @@
                 borderWidth: 3,
                 backgroundColor: gradientStroke2,
                 fill: true,
-                data: {{orderData}},
-                maxBarThickness: 6
+                data: {{ orderData }},
+            maxBarThickness: 6
             }],
         },
-        options: {
+            options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
@@ -208,7 +208,7 @@
             },
         },
     });
-</script>
+    </script>
 </body>
 
 </html>

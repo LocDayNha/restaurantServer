@@ -115,7 +115,33 @@ router.get('/getByDay', async function (req, res, next) {
         const year = currentDate.getFullYear();
         const today = `${day}/${month}/${year}`;
 
-        const listBooking = await bookingModel.find({ dayBooking: today }).populate({
+        const listBooking = await bookingModel.find({ dayBooking: today, confirm: 2 }).populate({
+            path: 'user_id',
+            select: 'email name phoneNumber'
+        })
+            .populate({
+                path: 'table_id',
+                populate: {
+                    path: 'timeline_id',
+                    select: 'name'
+                }
+            });
+        res.status(200).json({ "status": true, "message": "Thanh Cong", listBooking });
+    } catch (error) {
+        res.status(400).json({ "status": false, "message": "That Bai", error });
+    }
+});
+
+//localhost:3000/booking/getByConfirm
+router.get('/getByConfirm', async function (req, res, next) {
+    try {
+        const currentDate = new Date();
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const year = currentDate.getFullYear();
+        const today = `${day}/${month}/${year}`;
+
+        const listBooking = await bookingModel.find({ confirm: 1 }).populate({
             path: 'user_id',
             select: 'email name phoneNumber'
         })
@@ -189,7 +215,7 @@ router.get('/notification', async function (req, res, next) {
     try {
         const tomorrow = moment().add(1, 'days').format('DD/MM/YYYY');
 
-        const listEmailBooking = await bookingModel.find({ dayBooking: tomorrow, notification: false }).populate([
+        const listEmailBooking = await bookingModel.find({ dayBooking: tomorrow, notification: false, confirm: 2 }).populate([
             {
                 path: 'table_id',
                 populate: {

@@ -104,6 +104,8 @@
                                             Time</th>
                                         <th class="text-center text-secondary opacity-7">
                                             Day Booking</th>
+                                        <th class="text-center text-secondary opacity-7">
+                                            Confirm</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -121,7 +123,8 @@
                                             </p>
                                         </td>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0">{{seat}}
+                                            <p class="text-center text-xs font-weight-bold mb-0">
+                                                {{seat}}
                                             </p>
                                         </td>
                                         <td>
@@ -130,6 +133,16 @@
                                         </td>
                                         <td>
                                             <p class="text-center text-xs font-weight-bold mb-0">{{dayBooking}}</p>
+                                        </td>
+                                        <td>
+                                            <p
+                                                class="text-center text-xs font-weight-bold mb-0 {{#if (eq confirm 1)}}text-warning{{else if (eq confirm 2)}}text-success{{else if (eq confirm 3)}}text-danger{{else}}text-muted{{/if}}">
+                                                {{#if (eq confirm 1)}}Chờ xác nhận
+                                                {{else if (eq confirm 2)}}Thành công
+                                                {{else if (eq confirm 3)}}Đã bị hủy
+                                                {{else}}Không xác định
+                                                {{/if}}
+                                            </p>
                                         </td>
                                     </tr>
                                     {{/each}}

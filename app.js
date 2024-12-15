@@ -6,6 +6,11 @@ var logger = require('morgan');
 var cors = require('cors');
 var crypto = require('crypto');
 var mongoose = require('mongoose');
+const hbs = require('hbs');
+
+hbs.registerHelper('eq', function (a, b) {
+  return a === b;
+});
 
 require("./components/user/UserModel");
 require("./components/menu/MenuModel");
