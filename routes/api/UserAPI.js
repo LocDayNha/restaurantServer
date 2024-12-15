@@ -315,7 +315,10 @@ router.post("/forgotpass", async function (req, res, next) {
     const userMail = await userModel.findOne({ email: email });
 
     if (userMail && password === password2) {
-      userMail.password = password ? password : userMail.password;
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(password, salt);
+
+      userMail.password = hash;
       await userMail.save();
       return res
         .status(200)
@@ -327,7 +330,7 @@ router.post("/forgotpass", async function (req, res, next) {
     }
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ status: false, message: "Loi" });
+    return res.status(500).json({ status: false, message: "Loi" });
   }
 });
 
